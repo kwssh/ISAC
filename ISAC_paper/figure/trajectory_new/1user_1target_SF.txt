@@ -1,0 +1,8 @@
+SF_1user_1target_7dbm_142.4107
+SF_1user_1target_10dbm_148.3593
+SF_1user_1target_13dbm_150.3651
+SF_1user_1target_16dbm_151.1347
+SF_1user_1target_19dbm_151.4176
+SF_1user_1target_22dbm_151.5126
+
+SF_1user_comm_151.5456
