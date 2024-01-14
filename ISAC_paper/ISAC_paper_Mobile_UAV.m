@@ -1,162 +1,152 @@
 function sum_rate_final = ISAC_paper_Mobile_UAV()
     clear
+    format long
     rng(123);
 
-    scaling = 1000;
+    %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
+    PARAM.SCALING = 1000;
+
+    PARAM.NUM_USER = 1;
+    PARAM.NUM_TARGET = 1;
+    PARAM.NUM_ANTENNA = 12;
+    PARAM.NUM_EPISODE = 100;
+
+    PARAM.USER = [370 400];
+    PARAM.UAV_START = [450 525];
+    PARAM.UAV_END = [550 525];
+    PARAM.UAV_Z = 100;
+    PARAM.TARGET = [randi([450, 550], PARAM.NUM_TARGET, 1) randi([590, 610], PARAM.NUM_TARGET, 1)];
+
+    PARAM.NOISE_POWER = 10^-14;
+    PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
+
+    PARAM.SENSING_TH = 5 * 10^-5 * 0;
+    PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
+
+    PARAM.P_MAX = 0.5;
+    PARAM.CHANNEL_GAIN = 10^(-6);
+
+    PARAM.N = 3;
+    PARAM.V_MAX = 1000;
+    %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
-    num_target = 18;
-    % num_target = 0;
+    %-----------------------------initializing variable-----------------------------------------------------------------------------------------------------------------------------%
+    channel_t = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
+    channel_her_t = zeros(PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.N);
 
-    num_user = 8;
-    % num_user = 1;
+    channel = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
+    channel_her = zeros(PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.N);
 
-    num_antenna = 12;
-    noise_power = 10^-14 * scaling^2;
-    p_max = 0.5;
-    channel_gain = 10^(-6);
+    steering_target_t = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_TARGET, PARAM.N);
+    steering_target_her_t = zeros(PARAM.NUM_TARGET, PARAM.NUM_ANTENNA, PARAM.N);
 
-    sensing_th = 10^(-4.3) * scaling^2;
-    % sensing_th = 0 * scaling^2;
+    steering_target = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_TARGET, PARAM.N);
+    steering_target_her = zeros(PARAM.NUM_TARGET, PARAM.NUM_ANTENNA, PARAM.N);
 
-    V_max = 30;
-    N = 25;
+    distance_target_t = zeros(PARAM.NUM_TARGET, PARAM.N);
+    distance_user_t = zeros(PARAM.NUM_USER, PARAM.N);
 
-    num_episdoe = 10^6;
+    distance_target = zeros(PARAM.NUM_TARGET, PARAM.N);
+    distance_user = zeros(PARAM.NUM_USER, PARAM.N);
+
+    user_rate_episode = zeros(PARAM.NUM_USER, PARAM.N, PARAM.NUM_EPISODE);
+    %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
-    user = [370 400;
-            380 340; 
-            420 300; 
-            470 270; 
-            530 270; 
-            580 300; 
-            620 340; 
-            630 400];
-
-    % user = [370 400];
-    
-    start_position = [450, 525];
-    end_position = [550 525];
-    
-    target_x_1 = randi([450, 550], num_target / 2, 1);
-    target_x_2 = 1000 - target_x_1;
-   
-    target_y = randi([590, 610], num_target / 2, 1);
-    
-    target_1 = [target_x_1 target_y];
-    target_2 = [target_x_2 target_y];
-   
-    target = [target_1; target_2];
-    
-    channel_t = zeros(num_antenna, num_user, N);
-    channel_her_t = zeros(num_user, num_antenna, N);
-
-    channel = zeros(num_antenna, num_user, N);
-    channel_her = zeros(num_user, num_antenna, N);
-
-    steering_target_t = zeros(num_antenna, num_target, N);
-    steering_target_her_t = zeros(num_target, num_antenna, N);
-    steering_target = zeros(num_antenna, num_target, N);
-    steering_target_her = zeros(num_target, num_antenna, N);
-
-    distance_target_t = zeros(num_target, N);
-    distance_user_t = zeros(num_user, N);
-    distance_target = zeros(num_target, N);
-    distance_user = zeros(num_user, N);
-
-    sum_rate_episode = zeros(num_user, N, num_episdoe);
-
-    %-------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    for episode = 1:num_episdoe
+    %-----------------------------Epsiode Start-----------------------------------------------------------------------------------------------------------------------------%   
+    for episode = 1 : PARAM.NUM_EPISODE
 
         if episode == 1
-
-            [uav_t, W_t, R_t] = get_init_trajectory(target, num_antenna, num_user, num_target, sensing_th, p_max, scaling, V_max, N, start_position, end_position);
-
-
-            for n = 1 : N
-
-                for k = 1:num_user
-                    distance_user_t(k, n) = get_distance(uav_t(n, :), user(k,:));
-                    channel_t(:,k,n) = get_channel(uav_t(n, :), user(k,:), scaling);
-                    channel_her_t(k,:,n) = transpose(conj(channel_t(:,k,n)));
+            %-----------------------------initializing precoder-----------------------------------------------------------------------------------------------------------------------------%
+            [uav_t, W_t, R_t] = get_init_trajectory_SF(PARAM.TARGET, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.SENSING_TH_SCALING, PARAM.P_MAX, PARAM.SCALING, PARAM.V_MAX, PARAM.N, PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.UAV_Z);
+            %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
+      
+            %-----------------------------get channel and steering-----------------------------------------------------------------------------------------------------------------------------%
+            for n = 1 : PARAM.N
+                for k = 1 : PARAM.NUM_USER
+                    distance_user_t(k, n) = get_distance(uav_t(n, :), PARAM.USER(k,:), PARAM.UAV_Z);
+                    channel_t(:, k, n) = get_channel(uav_t(n, :), PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
+                    channel_her_t(k, :, n) = transpose(conj(channel_t(:, k, n)));
                 end
             
-                for j = 1:num_target
-                    distance_target_t(j, n) = get_distance(uav_t(n, :), target(j,:));
-                    steering_target_t(:, j, n) = get_steering(distance_target_t(j, n), scaling);
+                for j = 1 : PARAM.NUM_TARGET
+                    distance_target_t(j, n) = get_distance(uav_t(n, :), PARAM.TARGET(j,:), PARAM.UAV_Z);
+                    steering_target_t(:, j, n) = get_steering(distance_target_t(j, n), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
                     steering_target_her_t(j, :, n) = transpose(conj(steering_target_t(:, j, n)));
                 end
             end
-
-            [sum_rate_current, error] = get_test_trajectory(W_t, R_t, p_max, sensing_th, num_target, channel_t, channel_her_t, noise_power, steering_target_t, steering_target_her_t, distance_target_t, N);
-            sum_rate_episode(:,:,1) = sum_rate_current;
+            %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
+    
+            [user_rate_current, ~] = get_test_trajectory(W_t, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
+            user_rate_episode(:,:,1) = user_rate_current;
         end
-
-        sum_rate_prev = sum_rate_current;
-    
-        alpha = zeros(num_user, N);
-        alpha_tmp = zeros(num_user, N);
-        B = zeros(num_antenna, num_antenna, num_user, N);
-
-        for n = 1:N
-    
-            for k = 1:num_user
         
-                for i = 1:num_user
+        user_rate_prev = user_rate_current;
+
+        %-----------------------------initializing precoder optimize variable-----------------------------------------------------------------------------------------------------------------------------%
+        alpha = zeros(PARAM.NUM_USER, PARAM.N);
+        alpha_tmp = zeros(PARAM.NUM_USER, PARAM.N);
+        B = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
+
+        for n = 1 : PARAM.N
+        
+            for k = 1 : PARAM.NUM_USER
+    
+                for i = 1 : PARAM.NUM_USER
                     if i == k
                         continue;
                     end
-        
+    
                     alpha_tmp(k, n) = alpha_tmp(k, n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W_t(:,:,i,n)));
                 end
-        
-                alpha(k,n) = alpha_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + noise_power;
+    
+                alpha(k,n) = alpha_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + PARAM.NOISE_POWER_SCALING;
                 alpha(k,n) = log(alpha(k,n)) / log(2);
         
                 B(:,:,k,n) = channel_t(:,k,n) * channel_her_t(k,:,n);
-                B(:,:,k,n) = B(:,:,k,n) / (alpha_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + noise_power);
+                B(:,:,k,n) = B(:,:,k,n) / (alpha_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + PARAM.NOISE_POWER_SCALING);
                 B(:,:,k,n) = B(:,:,k,n) / log(2);
-        
+    
             end
         end
-      
+        %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
+    
+        %-----------------------------precoder CVX start-----------------------------------------------------------------------------------------------------------------------------%
         cvx_begin
-    
+
             cvx_solver Mosek
-    
-            expressions sum_rate(num_user, N)
-            expressions objective_1(num_user, N)
-            expressions objective_1_tmp(num_user, N)
-            expressions tmp(num_user, N)
-            expressions tmp_tmp(num_user, N)
-        
-            expressions objective_2(num_user, N)
-            expressions objective_2_tmp(num_user, N)
 
-            expressions sensing_constraint(num_target, N)
-        
-            variable W(num_antenna, num_antenna, num_user, N) complex
-            variable R(num_antenna, num_antenna, N) complex
+            expressions sum_rate(PARAM.NUM_USER, PARAM.N)
+            expressions objective_1(PARAM.NUM_USER, PARAM.N)
+            expressions objective_1_tmp(PARAM.NUM_USER, PARAM.N)
+            expressions tmp(PARAM.NUM_USER, PARAM.N)
+            expressions tmp_tmp(PARAM.NUM_USER, PARAM.N)
 
-            for n = 1:N
+            expressions objective_2(PARAM.NUM_USER, PARAM.N)
+            expressions objective_2_tmp(PARAM.NUM_USER, PARAM.N)
+
+            expressions sensing_constraint(PARAM.NUM_TARGET, PARAM.N)
+
+            variable W(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N) complex
+            variable R(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.N) complex
+
+            for n = 1 :PARAM.N
 
                 sensing_constraint_tmp = 0;
                 power_constraint_tmp = 0;
-        
-                for k = 1:num_user
-            
-                    for i = 1:num_user
+
+                for k = 1 : PARAM.NUM_USER
+    
+                    for i = 1:PARAM.NUM_USER
                         objective_1_tmp(k,n) = objective_1_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W(:,:,i,n)));
-        
+    
                         if i == k
                             continue;
                         end
-        
+    
                         objective_2_tmp(k,n) = objective_2_tmp(k,n) + real(trace(B(:,:,k,n) * (W(:,:,i,n) - W_t(:,:,i,n))));
                     end
-        
-                    tmp(k,n) = objective_1_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R(:,:,n))) + noise_power;
+    
+                    tmp(k,n) = objective_1_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R(:,:,n))) + PARAM.NOISE_POWER_SCALING;
                     tmp_tmp(k,n) = -rel_entr(1, tmp(k,n));
                     objective_1(k,n) = tmp_tmp(k,n) / log(2);
         
@@ -170,74 +160,74 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     
                 power_constraint = power_constraint_tmp + real(trace(R(:,:,n)));
     
-                for j = 1:num_target
+                for j = 1 : PARAM.NUM_TARGET
                     sensing_constraint(j,n) = real(steering_target_her_t(j,:,n) * (sensing_constraint_tmp + R(:,:,n)) * steering_target_t(:,j,n));
                 end
-            
+    
                 subject to
-            
-                    for k = 1:num_user
-                        W(:,:,k,n) == hermitian_semidefinite(num_antenna);
+    
+                    for k = 1 : PARAM.NUM_USER
+                        W(:,:,k,n) == hermitian_semidefinite(PARAM.NUM_ANTENNA);
                     end
     
-                    R(:,:,n) == hermitian_semidefinite(num_antenna);
-                    
-                    power_constraint <= p_max;
+                    R(:,:,n) == hermitian_semidefinite(PARAM.NUM_ANTENNA);
     
-                    for j = 1 : num_target
-                        sensing_constraint(j,n) >= sensing_th * distance_target_t(j,n)^2;
+                    power_constraint <= PARAM.P_MAX;
+    
+                    for j = 1 : PARAM.NUM_TARGET
+                        sensing_constraint(j,n) >= PARAM.SENSING_TH_SCALING * distance_target_t(j,n)^2;
                     end
             end
 
             maximize(sum(sum(sum_rate)));
-        
+
         cvx_end
+        %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
         
-
-        [W_opt, R_opt] = get_precoder_opt_trajectory(channel_t, channel_her_t, W, R, num_user, num_antenna, N);
-
-%-------------------------------------------------------------------------------------------------------------------------------------------------------%
-
-        % get_search(W_opt, W_t, R_opt, R_t, p_max, sensing_th, num_target, num_antenna, noise_power, user, target, num_user, scaling);
-
-        [sum_rate_prev_UAV, error_prev_UAV] = get_test_trajectory(W_opt, R_opt, p_max, sensing_th, num_target, channel_t, channel_her_t, noise_power, steering_target_t, steering_target_her_t, distance_target_t, N);
-     
+        [W_opt, R_opt] = get_precoder_opt_trajectory(channel_t, channel_her_t, W, R, PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.N);
+      
+        [user_rate_prev_UAV, error_prev_UAV] = get_test_trajectory(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
+        
+        %-----------------------------optimize UAV-----------------------------------------------------------------------------------------------------------------------------%
+       
         trust_region = 0.001;
 
         while(1)
 
-            uav = get_UAV_trajectory(uav_t, W_opt, R_opt, user, num_user, channel_gain, noise_power / scaling^2, sensing_th / scaling^2, num_target, target, trust_region, V_max, N);
-
-            disp(episode);
-            disp(trust_region);
-            disp(sum(sum(sum_rate_prev_UAV)));
-
-            for n = 1:N
-            
-                for k = 1:num_user
-                    distance_user(k, n) = get_distance(uav(n, :), user(k, :));
-                    channel(:, k, n) = get_channel(uav(n, :), user(k, :), scaling);
+            uav = get_UAV_trajectory(uav_t, W_opt, R_opt, PARAM.USER, PARAM.NUM_USER, PARAM.CHANNEL_GAIN, PARAM.NOISE_POWER, PARAM.SENSING_TH, PARAM.NUM_TARGET, PARAM.TARGET, trust_region, PARAM.V_MAX, PARAM.N, PARAM.UAV_Z);
+   
+            %-----------------------------get channel and steering with new UAV-----------------------------------------------------------------------------------------------------------------------------%
+            for n = 1 : PARAM.N
+                for k = 1 : PARAM.NUM_USER
+                    distance_user(k, n) = get_distance(uav(n, :), PARAM.USER(k,:), PARAM.UAV_Z);
+                    channel(:, k, n) = get_channel(uav(n, :), PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
                     channel_her(k, :, n) = transpose(conj(channel(:, k, n)));
                 end
-    
-                for j = 1:num_target
-                    distance_target(j, n) = get_distance(uav(n, :), target(j, :));
-                    steering_target(:, j, n) = get_steering(distance_target(j, n), scaling);
+            
+                for j = 1 : PARAM.NUM_TARGET
+                    distance_target(j, n) = get_distance(uav(n, :), PARAM.TARGET(j,:), PARAM.UAV_Z);
+                    steering_target(:, j, n) = get_steering(distance_target(j, n), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
                     steering_target_her(j, :, n) = transpose(conj(steering_target(:, j, n)));
                 end
             end
+            %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
-            [sum_rate_current_UAV, error_current_UAV] = get_test_trajectory(W_opt, R_opt, p_max, sensing_th, num_target, channel, channel_her, noise_power, steering_target, steering_target_her, distance_target, N);
-                                                           
-            disp(sum(sum(sum_rate_current_UAV)));
-            disp(sum(sum(sum_rate_current_UAV)) - sum(sum(sum_rate_prev_UAV)));
-            disp(uav);
+            [user_rate_current_UAV, error_current_UAV] = get_test_trajectory(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel, channel_her, PARAM.NOISE_POWER_SCALING, steering_target, steering_target_her, distance_target, PARAM.N);
+                                                          
+            %-----------------------------display part-----------------------------------------------------------------------------------------------------------------------------%
+            disp(['Episode           : ', num2str(episode)]);
+            disp(['Trust Region      : ', num2str(trust_region)]);
+            disp(['Previous Sum rate : ', num2str(sum(user_rate_prev_UAV))]);
+            disp(['Current Sum rate  : ', num2str(sum(user_rate_current_UAV))]);
+            disp(['Diff Sum rate     : ', num2str(sum(user_rate_current_UAV) - sum(user_rate_prev_UAV))]);
+            fprintf('UAV position      : %f   %f\n                    %f   %f\n                    %f   %f\n', uav_t.');
+            %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
-            if sum(sum(sum_rate_current_UAV)) > sum(sum(sum_rate_prev_UAV))
+            if sum(sum(user_rate_current_UAV)) > sum(sum(user_rate_prev_UAV))
                 uav_t = uav;
                 trust_region = 0.001;
 
-                sum_rate_prev_UAV = sum_rate_current_UAV;
+                user_rate_prev_UAV = user_rate_current_UAV;
             else
                 trust_region = trust_region / 2;
             end
@@ -247,36 +237,35 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
             end
         end
 
-%--------------------------------------------------------------------------------------------%
+        %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
-        for n = 1:N
-            for k = 1:num_user
-                distance_user_t(k,n) = get_distance(uav_t(n,:), user(k,:));
-                channel_t(:,k,n) = get_channel(uav_t(n,:), user(k,:), scaling);
-                channel_her_t(k,:,n) = transpose(conj(channel_t(:,k,n)));
+        for n = 1 : PARAM.N
+            for k = 1 : PARAM.NUM_USER
+                distance_user_t(k, n) = get_distance(uav_t(n, :), PARAM.USER(k,:), PARAM.UAV_Z);
+                channel_t(:, k, n) = get_channel(uav_t(n, :), PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
+                channel_her_t(k, :, n) = transpose(conj(channel_t(:, k, n)));
             end
         
-            for j = 1:num_target
-                distance_target_t(j,n) = get_distance(uav_t(n,:), target(j,:));
-                steering_target_t(:,j,n) = get_steering(distance_target_t(j,n), scaling);
-                steering_target_her_t(j,:,n) = transpose(conj(steering_target_t(:,j,n)));
+            for j = 1 : PARAM.NUM_TARGET
+                distance_target_t(j, n) = get_distance(uav_t(n, :), PARAM.TARGET(j,:), PARAM.UAV_Z);
+                steering_target_t(:, j, n) = get_steering(distance_target_t(j, n), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
+                steering_target_her_t(j, :, n) = transpose(conj(steering_target_t(:, j, n)));
             end
         end
 
-        [sum_rate_current, error] = get_test_trajectory(W_opt, R_opt, p_max, sensing_th, num_target, channel_t, channel_her_t, noise_power, steering_target_t, steering_target_her_t, distance_target_t, N);
-     
-        disp(error);
-            
-        sum_rate_episode(:,:,episode) = sum_rate_current;
+        [user_rate_current, ~] = get_test_trajectory(W_t, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
+       
+        user_rate_episode(:,:,episode) = user_rate_current;
 
-        if sum(sum(sum_rate_current)) - sum(sum(sum_rate_prev)) < 1e-6
+        if sum(sum(user_rate_current)) - sum(sum(user_rate_prev)) < 1e-6
             break;
         end
 
         R_t = R_opt;
         W_t = W_opt;
     end
-
+    %-----------------------------Epsiode End-----------------------------------------------------------------------------------------------------------------------------%
+    
     % get_received_BEAM_GAIN(W_opt, R_opt, num_user, num_antenna, sensing_th, scaling, distance_user_t, distance_target_t);
 
 end
