@@ -3,6 +3,8 @@ function sum_rate_final = ISAC_paper_Quasi_UAV()
     format long
     rng(123);
 
+    faefadsf
+
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
