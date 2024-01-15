@@ -73,13 +73,13 @@ function uav = get_UAV_trajectory(uav_t, W_opt, R_opt, user, num_user, channel_g
                     
                 for j = 1:num_target
     
-                    distance_target_UAV = get_distance(target(j,:), uav(n,:), uav_z);
+                    distance_target_UAV(j) = get_distance(target(j,:), uav(n,:), uav_z);
                     distance_target_UAV_t(j,n) = get_distance(target(j,:), uav_t(n,:), uav_z);
     
                     h_target(j,n) = get_beam_gain_UAV(G_opt(:,:,n), distance_target_UAV_t(j,n));
                     i_target(:,:,j,n) = get_beam_gain_diff_UAV(G_opt(:,:,n), distance_target_UAV_t(j,n), uav_t(n,:), target(j,:));
     
-                    sensing_constraint = h_target(j,n) + sum(i_target(:,:,j,n) .* (uav(n,:) - uav_t(n,:))) - sensing_th * pow_pos(distance_target_UAV,2);
+                    sensing_constraint = h_target(j,n) + sum(i_target(:,:,j,n) .* (uav(n,:) - uav_t(n,:))) - sensing_th * pow_pos(distance_target_UAV(j),2);
                     sensing_constraint >= 0;
                 end
     
@@ -89,18 +89,18 @@ function uav = get_UAV_trajectory(uav_t, W_opt, R_opt, user, num_user, channel_g
                 0 <= uav(n,1) <= 1000;
                 0 <= uav(n,2) <= 1000;
 
-                if n == 1
-
-                    uav(1,1) == uav_t(1,1);
-                    uav(1,2) == uav_t(1,2);
-
-                    uav(N,1) == uav_t(N,1);
-                    uav(N,2) == uav_t(N,2);
-
-                else
-                    velocity_UAV = norm([uav(n,1) - uav(n-1,1), uav(n,2) - uav(n-1,2)]);
-                    velocity_UAV <= V_max;
-                end
+                % if n == 1
+                % 
+                %     uav(1,1) == uav_t(1,1);
+                %     uav(1,2) == uav_t(1,2);
+                % 
+                %     uav(N,1) == uav_t(N,1);
+                %     uav(N,2) == uav_t(N,2);
+                % 
+                % else
+                %     velocity_UAV = norm([uav(n,1) - uav(n-1,1), uav(n,2) - uav(n-1,2)]);
+                %     velocity_UAV <= V_max;
+                % end
 
         end
         
