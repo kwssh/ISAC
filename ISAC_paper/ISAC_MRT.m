@@ -70,7 +70,8 @@ function sum_rate_final = ISAC_MRT()
                     channel_t(:, k, n) = get_channel(uav_t(n, :), PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
                     channel_her_t(k, :, n) = transpose(conj(channel_t(:, k, n)));
 
-                    W_opt(:,:,k,n) = channel_t(:, k, n) / (channel_her_t(k, :, n) * channel_t(:, k, n));
+                    W_opt_tmp = (channel_t(:,k,n) / (sqrt(channel_her_t(k,:,n) * channel_t(:,k,n)))) / sqrt(2);
+                    W_opt(:,:,k,n) = W_opt_tmp * transpose(conj(W_opt_tmp));
                 end
             
                 for j = 1 : PARAM.NUM_TARGET
@@ -87,8 +88,9 @@ function sum_rate_final = ISAC_MRT()
 
         %-----------------------------get MRT precoder------------------------------------------------------------------------------------------------------------------------------%
         for n = 1 : PARAM.N
-            for k = 1 : PARAM.N
-                W_opt(:,:,k,n) = channel_t(:, k, n) / (channel_her_t(k, :, n) * channel_t(:, k, n));
+            for k = 1 : PARAM.NUM_USER
+                W_opt_tmp = (channel_t(:,k,n) / (sqrt(channel_her_t(k,:,n) * channel_t(:,k,n)))) / sqrt(2);
+                W_opt(:,:,k,n) = W_opt_tmp * transpose(conj(W_opt_tmp));
             end
         end
         %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
