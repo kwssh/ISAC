@@ -101,7 +101,7 @@ function sum_rate_final = ISAC_MRT()
         
         %-----------------------------optimize UAV-----------------------------------------------------------------------------------------------------------------------------%
        
-        trust_region = 0.001;
+        trust_region = 0.1;
 
         while(1)
 
@@ -136,7 +136,7 @@ function sum_rate_final = ISAC_MRT()
 
             if sum(sum(user_rate_current_UAV)) > sum(sum(user_rate_prev_UAV))
                 uav_t = uav;
-                trust_region = 0.001;
+                trust_region = 0.1;
 
                 user_rate_prev_UAV = user_rate_current_UAV;
             else
@@ -168,7 +168,7 @@ function sum_rate_final = ISAC_MRT()
        
         user_rate_episode(:,:,episode) = user_rate_current;
 
-        if sum(sum(user_rate_current)) - sum(sum(user_rate_prev)) < 1e-6
+        if sum(sum(user_rate_current)) <= sum(sum(user_rate_prev))
             break;
         end
 
