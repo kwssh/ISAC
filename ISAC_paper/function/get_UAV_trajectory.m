@@ -1,4 +1,4 @@
-function uav = get_UAV_trajectory(uav_t, W_opt, R_opt, user, num_user, channel_gain, noise_power, sensing_th, num_target, target, trust_region, V_max, N, uav_z)
+function uav = get_UAV_trajectory(uav_t, W_opt, R_opt, user, num_user, channel_gain, noise_power, sensing_th, num_target, target, trust_region, V_max, N, uav_z, delta_t)
     
     num_antenna = size(W_opt, 1);
     c = zeros(num_user, N);
@@ -99,7 +99,7 @@ function uav = get_UAV_trajectory(uav_t, W_opt, R_opt, user, num_user, channel_g
 
                 else
                     velocity_UAV = norm([uav(n,1) - uav(n-1,1), uav(n,2) - uav(n-1,2)]);
-                    velocity_UAV <= V_max;
+                    velocity_UAV <= V_max * delta_t;
                 end
 
         end
