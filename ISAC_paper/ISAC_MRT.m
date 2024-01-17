@@ -134,7 +134,8 @@ function sum_rate_final = ISAC_MRT()
             disp(['Previous Sum rate : ', num2str(sum(user_rate_prev_UAV))]);
             disp(['Current Sum rate  : ', num2str(sum(user_rate_current_UAV))]);
             disp(['Diff Sum rate     : ', num2str(sum(user_rate_current_UAV) - sum(user_rate_prev_UAV))]);
-            fprintf('UAV position      : %f   %f\n                    %f   %f\n                    %f   %f\n', uav_t.');
+            get_display(distance_user, 'Distance user     : ');
+            get_display(uav_t, 'UAV position      : ');
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
             if sum(sum(user_rate_current_UAV)) > sum(sum(user_rate_prev_UAV))
