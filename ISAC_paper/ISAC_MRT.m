@@ -6,12 +6,20 @@ function sum_rate_final = ISAC_MRT()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 1;
+    PARAM.NUM_USER = 8;
     PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 100;
 
-    PARAM.USER = [370 400];
+    PARAM.USER = [370 400;
+                  380 340; 
+                  420 300; 
+                  470 270; 
+                  530 270; 
+                  580 300; 
+                  620 340; 
+                  630 400];
+    % PARAM.USER = [370 400];
     PARAM.UAV_START = [450 525];
     PARAM.UAV_END = [550 525];
     PARAM.UAV_Z = 1;
@@ -26,11 +34,11 @@ function sum_rate_final = ISAC_MRT()
     PARAM.P_MAX = 0.5;
     PARAM.CHANNEL_GAIN = 10^(-6);
 
-    PARAM.T = 15;
-    PARAM.N = 3;
+    PARAM.T = 14;
+    PARAM.N = 5;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
     PARAM.V_MAX = 1000;
-    PARAM.TRUST_REGION = 100;
+    PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
     %-----------------------------initializing variable-----------------------------------------------------------------------------------------------------------------------------%
@@ -134,11 +142,11 @@ function sum_rate_final = ISAC_MRT()
             disp(['Previous Sum rate : ', num2str(sum(user_rate_prev_UAV))]);
             disp(['Current Sum rate  : ', num2str(sum(user_rate_current_UAV))]);
             disp(['Diff Sum rate     : ', num2str(sum(user_rate_current_UAV) - sum(user_rate_prev_UAV))]);
-            get_display(distance_user, 'Distance user     : ');
+            get_display(distance_user_t, 'Distance user     : ');
             get_display(uav_t, 'UAV position      : ');
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
-            if sum(sum(user_rate_current_UAV)) > sum(sum(user_rate_prev_UAV))
+            if sum(user_rate_current_UAV(:, 2:PARAM.N-1)) > sum(user_rate_prev_UAV(:, 2:PARAM.N-1))
                 uav_t = uav;
                 trust_region = PARAM.TRUST_REGION;
 
@@ -147,7 +155,7 @@ function sum_rate_final = ISAC_MRT()
                 trust_region = trust_region / 2;
             end
 
-            if trust_region < 10^(-6)
+            if trust_region < 10^(-8)
                 break
             end
         end

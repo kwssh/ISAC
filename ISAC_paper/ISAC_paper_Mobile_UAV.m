@@ -1,33 +1,42 @@
 function sum_rate_final = ISAC_paper_Mobile_UAV()
     clear
     format long
-    rng(123);
-
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 1;
-    PARAM.NUM_TARGET = 1;
+    PARAM.NUM_USER = 8;
+    PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
-    PARAM.NUM_EPISODE = 100;
+    PARAM.NUM_EPISODE = 10^6;
 
-    PARAM.USER = [370 400];
+    PARAM.USER = [370 400;
+                  380 340; 
+                  420 300; 
+                  470 270; 
+                  530 270; 
+                  580 300; 
+                  620 340; 
+                  630 400];
+    % PARAM.USER = [370 400];
     PARAM.UAV_START = [450 525];
     PARAM.UAV_END = [550 525];
-    PARAM.UAV_Z = 1;
-    PARAM.TARGET = [randi([450, 550], PARAM.NUM_TARGET, 1) randi([590, 610], PARAM.NUM_TARGET, 1)];
-
+    PARAM.UAV_Z = 100;
+    PARAM.TARGET = get_target(PARAM.NUM_TARGET);
+    
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH = 5 * 10^-5 * 0;
+    PARAM.SENSING_TH = 5 * 10^-5;
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.5;
     PARAM.CHANNEL_GAIN = 10^(-6);
 
+    PARAM.T = 15;
     PARAM.N = 3;
+    PARAM.DELTA_T = PARAM.T / PARAM.N;
     PARAM.V_MAX = 1000;
+    PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
     %-----------------------------initializing variable-----------------------------------------------------------------------------------------------------------------------------%
@@ -190,11 +199,11 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
         
         %-----------------------------optimize UAV-----------------------------------------------------------------------------------------------------------------------------%
        
-        trust_region = 0.001;
+        trust_region = PARAM.TRUST_REGION;
 
         while(1)
 
-            uav = get_UAV_trajectory(uav_t, W_opt, R_opt, PARAM.USER, PARAM.NUM_USER, PARAM.CHANNEL_GAIN, PARAM.NOISE_POWER, PARAM.SENSING_TH, PARAM.NUM_TARGET, PARAM.TARGET, trust_region, PARAM.V_MAX, PARAM.N, PARAM.UAV_Z);
+            uav = get_UAV_trajectory(uav_t, W_opt, R_opt, PARAM.USER, PARAM.NUM_USER, PARAM.CHANNEL_GAIN, PARAM.NOISE_POWER, PARAM.SENSING_TH, PARAM.NUM_TARGET, PARAM.TARGET, trust_region, PARAM.V_MAX, PARAM.N, PARAM.UAV_Z, PARAM.DELTA_T);
    
             %-----------------------------get channel and steering with new UAV-----------------------------------------------------------------------------------------------------------------------------%
             for n = 1 : PARAM.N
@@ -220,12 +229,13 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
             disp(['Previous Sum rate : ', num2str(sum(user_rate_prev_UAV))]);
             disp(['Current Sum rate  : ', num2str(sum(user_rate_current_UAV))]);
             disp(['Diff Sum rate     : ', num2str(sum(user_rate_current_UAV) - sum(user_rate_prev_UAV))]);
-            fprintf('UAV position      : %f   %f\n                    %f   %f\n                    %f   %f\n', uav_t.');
+            get_display(distance_user_t, 'Distance user     : ');
+            get_display(uav_t, 'UAV position      : ');
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
-            if sum(sum(user_rate_current_UAV)) > sum(sum(user_rate_prev_UAV))
+            if sum(user_rate_current_UAV(:, 2:PARAM.N-1)) > sum(user_rate_prev_UAV(:, 2:PARAM.N-1))
                 uav_t = uav;
-                trust_region = 0.001;
+                trust_region = PARAM.TRUST_REGION;
 
                 user_rate_prev_UAV = user_rate_current_UAV;
             else
