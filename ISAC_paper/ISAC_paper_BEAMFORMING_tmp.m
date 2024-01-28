@@ -6,20 +6,20 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 2;
+    PARAM.NUM_USER = 8;
     PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 100;
 
-    % PARAM.USER = [370 400;
-    %               380 340; 
-    %               420 300; 
-    %               470 270; 
-    %               530 270; 
-    %               580 300; 
-    %               620 340; 
-    %               630 400];
-    PARAM.USER = [370 400; 500 525];
+    PARAM.USER = [370 400;
+                  380 340; 
+                  420 300; 
+                  470 270; 
+                  530 270; 
+                  580 300; 
+                  620 340; 
+                  630 400];
+    % PARAM.USER = [370 400; 500 525];
     PARAM.UAV_T = [450 525];
     PARAM.UAV_Z = 100;
     PARAM.TARGET = [randi([450, 550], PARAM.NUM_TARGET, 1) randi([590, 610], PARAM.NUM_TARGET, 1)];
