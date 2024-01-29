@@ -30,13 +30,15 @@ function get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, 
     imagesc(x, y, beam_gain');
     set(gca, 'YDir','normal');
     hold on;
+    q = [450 525];
+    plot(q(:, 1), q(:, 2), "+", 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'black');
     plot(uav(:, 1), uav(:, 2), "+", 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'green');
     plot(user(:, 1), user(:, 2), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
-    scatter(target(:, 1), target(:, 2), 'ro', 'filled');
+    plot(target(:, 1), target(:, 2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
     
     colorbar;
     xlabel('X (m)');
     ylabel('Y (m)');
 
-    legend('UAV position', 'User position');
+    legend('UAV position(initial point)', 'UAV position(final point)', 'User position', 'Target position');
 end

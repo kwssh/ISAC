@@ -6,8 +6,8 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 2;
-    PARAM.NUM_TARGET = 0;
+    PARAM.NUM_USER = 1;
+    PARAM.NUM_TARGET = 1;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 100;
 
@@ -19,15 +19,17 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
     %               580 300; 
     %               620 340; 
     %               630 400];
-    PARAM.USER = [370 400; 500 525];
-    PARAM.UAV_T = [450 525];
+    PARAM.USER = [370 400];
+    PARAM.UAV_T = [450 446.9];
+    % PARAM.UAV_T = [450 525];
     PARAM.UAV_Z = 100;
-    PARAM.TARGET = [randi([450, 550], PARAM.NUM_TARGET, 1) randi([590, 610], PARAM.NUM_TARGET, 1)];
+    PARAM.TARGET = get_target(PARAM.NUM_TARGET);
+    PARAM.TARGET = [500 525];
 
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH = 5 * 10^-5;
+    PARAM.SENSING_TH = 10^(-4);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.5;
