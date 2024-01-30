@@ -37,8 +37,12 @@ function get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, 
     plot(target(:, 1), target(:, 2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
     
     colorbar;
+    caxis([0, 6]);
+    
     xlabel('X (m)');
     ylabel('Y (m)');
 
     legend('UAV position(initial point)', 'UAV position(final point)', 'User position', 'Target position');
+    % legend('UAV position(final point)', 'User position', 'Target position');
+
 end
