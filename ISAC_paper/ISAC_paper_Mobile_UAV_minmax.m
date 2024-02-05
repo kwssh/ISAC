@@ -4,22 +4,14 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_minmax()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 1;
+    PARAM.NUM_USER = 2;
     PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 10^6;
 
-    % PARAM.USER = [370 400;
-    %               380 340; 
-    %               420 300; 
-    %               470 270; 
-    %               530 270; 
-    %               580 300; 
-    %               620 340; 
-    %               630 400];
-    PARAM.USER = [370 400];
-    PARAM.UAV_START = [450 525];
-    PARAM.UAV_END = [550 525];
+    PARAM.USER = [-100 -100; 100 -100];
+    PARAM.UAV_START = [-100 0];
+    PARAM.UAV_END = [100 0];
     PARAM.UAV_Z = 100;
     PARAM.TARGET = get_target(PARAM.NUM_TARGET);
     
@@ -35,7 +27,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_minmax()
     PARAM.T = 15;
     PARAM.N = 3;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 1000;
+    PARAM.V_MAX = 10000;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
@@ -240,7 +232,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_minmax()
             get_display(uav_t, 'UAV position      : ');
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
-            if sum(user_rate_current_UAV(:, 2:PARAM.N-1)) > sum(user_rate_prev_UAV(:, 2:PARAM.N-1))
+            if min(sum(user_rate_current_UAV,2)) > min(sum(user_rate_prev_UAV,2))
                 uav_t = uav;
                 trust_region = PARAM.TRUST_REGION;
 
@@ -274,7 +266,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_minmax()
        
         user_rate_episode(:,:,episode) = user_rate_current;
 
-        if sum(sum(user_rate_current)) - sum(sum(user_rate_prev)) < 1e-6
+        if min(sum(user_rate_current,2)) - min(sum(user_rate_prev,2)) < 1e-6
             break;
         end
 

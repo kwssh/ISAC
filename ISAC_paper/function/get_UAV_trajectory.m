@@ -86,8 +86,8 @@ function uav = get_UAV_trajectory(uav_t, W_opt, R_opt, user, num_user, channel_g
                 distance_UAV = norm([uav(n,1) - uav_t(n,1), uav(n,2) - uav_t(n,2)]);
                 distance_UAV <= trust_region;
     
-                0 <= uav(n,1) <= 1000;
-                0 <= uav(n,2) <= 1000;
+                -1000 <= uav(n,1) <= 1000;
+                -1000 <= uav(n,2) <= 1000;
 
                 if n == 1
 

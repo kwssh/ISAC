@@ -4,22 +4,14 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 8;
+    PARAM.NUM_USER = 2;
     PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 10^6;
 
-    PARAM.USER = [370 400;
-                  380 340; 
-                  420 300; 
-                  470 270; 
-                  530 270; 
-                  580 300; 
-                  620 340; 
-                  630 400];
-    % PARAM.USER = [370 400];
-    PARAM.UAV_START = [450 525];
-    PARAM.UAV_END = [550 525];
+    PARAM.USER = [-100 -100; 100 -100];
+    PARAM.UAV_START = [-100 0];
+    PARAM.UAV_END = [100 0];
     PARAM.UAV_Z = 100;
     PARAM.TARGET = get_target(PARAM.NUM_TARGET);
     

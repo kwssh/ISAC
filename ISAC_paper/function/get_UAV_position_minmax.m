@@ -1,4 +1,4 @@
-function uav = get_UAV_position(uav_t, W_opt, R_opt, user, num_user, channel_gain, noise_power, sensing_th, num_target, target, trust_region, uav_z)
+function uav = get_UAV_position_minmax(uav_t, W_opt, R_opt, user, num_user, channel_gain, noise_power, sensing_th, num_target, target, trust_region, uav_z)
     
     c = zeros(num_user, 1);
     c_1_tmp = zeros(num_user, 1);
@@ -25,6 +25,7 @@ function uav = get_UAV_position(uav_t, W_opt, R_opt, user, num_user, channel_gai
         cvx_solver Mosek
 
         variable uav(1,2)
+        variable tau
         expressions user_rate(num_user, 1)
         expressions sensing_constraint(num_target, 1)
         expressions distance_target_UAV(num_target, 1)
@@ -64,7 +65,7 @@ function uav = get_UAV_position(uav_t, W_opt, R_opt, user, num_user, channel_gai
             user_rate(k) = c(k) + sum(d(:,:,k) .* (uav - uav_t));
         end
 
-        maximize(sum(user_rate));
+        maximize(tau);
 
         subject to
                 
@@ -86,6 +87,9 @@ function uav = get_UAV_position(uav_t, W_opt, R_opt, user, num_user, channel_gai
             -1000 <= uav(1,1) <= 1000;
             -1000 <= uav(1,2) <= 1000;
 
+            for k = 1:num_user
+                user_rate(k) >= tau;
+            end
 
     cvx_end
 end

@@ -8,8 +8,8 @@ function get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, 
 
     precoder_total = precoder_total + R;
 
-    axis_min = 250;
-    axis_max = 750;
+    axis_min = -150;
+    axis_max = 250;
 
     x = linspace(axis_min, axis_max, axis_max - axis_min + 1);
     y = linspace(axis_min, axis_max, axis_max - axis_min + 1);

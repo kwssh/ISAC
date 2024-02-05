@@ -113,6 +113,7 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
 
             variable W(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_USER) complex
             variable R(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA) complex
+            variable tau
 
             for k = 1 : PARAM.NUM_USER
 
@@ -144,7 +145,7 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
                 sensing_constraint(j) = real(steering_target_her_t(j,:) * (sensing_constraint_tmp + R) * steering_target_t(:,j));
             end
 
-            maximize(sum(sum_rate));
+            maximize(tau);
 
             subject to
 
@@ -160,6 +161,10 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
                     sensing_constraint(j) >= PARAM.SENSING_TH_SCALING * distance_target_t(j)^2;
                 end
 
+                for k = 1 : PARAM.NUM_USER
+                    sum_rate(k) >= tau;
+                end
+
         cvx_end
         %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
@@ -169,7 +174,7 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
 
         user_rate_episode(:,episode) = user_rate_current;
 
-        if sum(user_rate_current) - sum(user_rate_prev) < 1e-6
+        if min(user_rate_current) - min(user_rate_prev) < 1e-6
             break;
         end
 
