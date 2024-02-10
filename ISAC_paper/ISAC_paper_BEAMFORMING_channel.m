@@ -43,7 +43,7 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
         %-----------------------------get channel and steering-----------------------------------------------------------------------------------------------------------------------------%
         for k = 1 : PARAM.NUM_USER
             distance_user_t(k) = get_distance(PARAM.UAV_T, PARAM.USER(k,:), PARAM.UAV_Z);
-            channel_t(:,k) = get_channel(PARAM.UAV_T, PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
+            channel_t(:,k) = get_channel_channel(PARAM.UAV_T, PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
             channel_her_t(k,:) = transpose(conj(channel_t(:,k)));
         end
     

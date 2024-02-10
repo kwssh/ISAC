@@ -17,7 +17,7 @@ pho = 0.35;
 dynamic_power = 10^(-5.6);
 epsilon = 10^(-3);
 
-user_direction = [-30 30];
+user_direction = [-30 20];
 target_direction = [-54, 18];
 
 channel = zeros(num_antenna, num_user);
