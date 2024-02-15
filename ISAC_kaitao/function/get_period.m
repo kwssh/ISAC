@@ -1,4 +1,4 @@
-function [A_opt, E_opt] = get_period(A_bar, E_bar, channel_gain, noise_power, num_antenna, p_max, distance_user, num_user, distance_target, num_target, sensing_th, N, eta, N_L, L, rate_th)
+function [A, E] = get_period(A_bar, E_bar, channel_gain, noise_power, num_antenna, p_max, distance_user, num_user, distance_target, num_target, sensing_th, N, eta, N_L, L, rate_th)
 
     cvx_begin
 
@@ -42,11 +42,9 @@ function [A_opt, E_opt] = get_period(A_bar, E_bar, channel_gain, noise_power, nu
                 sum(user_rate_left_tmp(:,(l-1) * N_L + 1 : l * N_L), 2) / N_L >= rate_th;
             end
 
-            % sum(E_sum_user) <= 1;
+            sum(E_sum_user) <= 1;
 
-            % beam_pattern_gain >= 0;
+            beam_pattern_gain >= 0;
 
     cvx_end
-
-
 end

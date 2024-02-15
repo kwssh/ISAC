@@ -3,7 +3,8 @@ function [A, E, uav_init] = get_init(start_x, end_x, uav_y, N, N_L, num_user, nu
     uav_init_tmp = linspace(start_x, end_x, N);
     uav_init = [uav_init_tmp' ones(N, 1) * uav_y];
 
-    A = zeros(num_user, N);
+    % A = zeros(num_user, N);
+    A = [eye(num_user) eye(num_user)];
     C = zeros(num_target, N);
     E = zeros(num_user * num_target, N);
     

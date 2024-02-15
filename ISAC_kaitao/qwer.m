@@ -16,7 +16,7 @@ function sum_rate_final = qwer()
     PARAM.UAV_END = [520 200];
     PARAM.UAV_Z = 40;
     % PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
-    PARAM.TARGET = [320 160; 480 160];
+    PARAM.TARGET = [370 160; 430 160];
 
     PARAM.NOISE_POWER = 10^(-10);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
@@ -32,12 +32,12 @@ function sum_rate_final = qwer()
 
     PARAM.T = 80;
     PARAM.T_L = 20;
-    PARAM.DELTA_T = 20;
+    PARAM.DELTA_T = 10;
     PARAM.L = PARAM.T / PARAM.T_L;
     PARAM.N = PARAM.T / PARAM.DELTA_T;
     PARAM.N_L = PARAM.N / PARAM.L;
     PARAM.V_MAX = 30;
-    PARAM.ETA = 100;
+    PARAM.ETA = 10^-10;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
     [A_bar_opt, E_bar_opt, uav_init] = get_init(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.N, PARAM.N_L, PARAM.NUM_USER, PARAM.NUM_TARGET);
@@ -45,7 +45,7 @@ function sum_rate_final = qwer()
     distance_user = get_distance(PARAM.USER, uav_init, PARAM.UAV_Z);
     distance_target = get_distance(PARAM.TARGET, uav_init, PARAM.UAV_Z);
 
-    [A_opt, E_opt] = get_period(A_bar_opt, E_bar_opt, PARAM.CHANNEL_GAIN, PARAM.NOISE_POWER, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH);
+    [A_opt, E_opt] = get_period_tmp(A_bar_opt, E_bar_opt, PARAM.CHANNEL_GAIN, PARAM.NOISE_POWER, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH);
 
-
+    
 end
