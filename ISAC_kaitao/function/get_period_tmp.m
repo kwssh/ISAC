@@ -1,6 +1,5 @@
-function [A, E] = get_period_tmp(A_bar, E_bar, channel_gain, noise_power, num_antenna, p_max, distance_user, num_user, distance_target, num_target, sensing_th, N, eta, N_L, L, rate_th)
+function [A, E] = get_period_tmp(A_bar, E_bar, num_antenna, p_max, distance_user, num_user, distance_target, num_target, sensing_th, N, eta, N_L, L, rate_th, gamma_0)
 
-    gamma_0 = channel_gain / noise_power;
     rate_tmp = zeros(1 + num_target);
     rate_th_tmp = zeros(1 + num_target);
     
@@ -46,10 +45,15 @@ function [A, E] = get_period_tmp(A_bar, E_bar, channel_gain, noise_power, num_an
 
                 sum_rate = sum_rate + user_rate;
 
-                rate_th_tmp(1,1) = user_rate_comm(k,n);
+                rate_th_tmp(1,1) = user_rate_comm(k,n) / N;
                 rate_th_tmp(2:end,1) = rate_diff;
                 rate_th_tmp(1,2:end) = rate_diff';
-                user_rate_th(k, n) = x' * rate_th_tmp * x;
+
+                [eig_vec, eig_val] = eig(rate_th_tmp);
+                eig_val(eig_val < 0) = 0;
+                rate_th_tmp_new = eig_vec * eig_val / (eig_vec);
+
+                user_rate_th(k, n) = x' * rate_th_tmp_new * x;
             end
         end
 
@@ -70,7 +74,7 @@ function [A, E] = get_period_tmp(A_bar, E_bar, channel_gain, noise_power, num_an
             for l = 1 : L
                 sum(E_sum_user(:,(l-1) * N_L + 1 : l * N_L), 2) == 1;
 
-                sum(user_rate_th(:,(l-1) * N_L + 1 : l * N_L), 2) / N_L >= rate_th;
+                % sum(user_rate_th(:,(l-1) * N_L + 1 : l * N_L), 2) / N_L >= rate_th;
             end
 
             sum(E_sum_user) <= 1;

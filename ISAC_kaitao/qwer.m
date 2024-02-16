@@ -1,5 +1,6 @@
 function sum_rate_final = qwer()
     clear
+    clc
     format long
     rng(123);
     
@@ -29,6 +30,7 @@ function sum_rate_final = qwer()
 
     PARAM.P_MAX = 0.1;
     PARAM.CHANNEL_GAIN = 10^(-3);
+    PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
     PARAM.T = 80;
     PARAM.T_L = 20;
@@ -37,15 +39,26 @@ function sum_rate_final = qwer()
     PARAM.N = PARAM.T / PARAM.DELTA_T;
     PARAM.N_L = PARAM.N / PARAM.L;
     PARAM.V_MAX = 30;
-    PARAM.ETA = 10^-10;
+    PARAM.ETA = 10^-1;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
-    [A_bar_opt, E_bar_opt, uav_init] = get_init(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.N, PARAM.N_L, PARAM.NUM_USER, PARAM.NUM_TARGET);
+    for episode = 1 : 10^6
+        
+        if episode == 1
+            [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.N, PARAM.N_L, PARAM.NUM_USER, PARAM.NUM_TARGET);
+        end
 
-    distance_user = get_distance(PARAM.USER, uav_init, PARAM.UAV_Z);
-    distance_target = get_distance(PARAM.TARGET, uav_init, PARAM.UAV_Z);
-
-    [A_opt, E_opt] = get_period_tmp(A_bar_opt, E_bar_opt, PARAM.CHANNEL_GAIN, PARAM.NOISE_POWER, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH);
-
+        distance_user = get_distance(PARAM.USER, old_uav, PARAM.UAV_Z);
+        distance_target = get_distance(PARAM.TARGET, old_uav, PARAM.UAV_Z);
+    
+        [new_A_bar_opt, new_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
+        [new_A_opt, new_E_opt] = get_period_tmp(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH, PARAM.GAMMA);
+        new_uav = get_uav_trajectory(old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.N, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH);
+    
+    
+    
+    
+    
+    end
     
 end
