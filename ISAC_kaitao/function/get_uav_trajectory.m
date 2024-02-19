@@ -18,7 +18,7 @@ function uav = get_uav_trajectory(A_opt, E_opt, A_bar_opt, E_bar_opt, distance_u
 
             z_user_tmp = repmat(z_user(k, :), num_target, 1);
         
-            user_rate_ISAC_tmp = log2(1 + ((gamma_0 * num_antenna * p_max - (z_target * sensing_th)) ./ (z_user_tmp)));
+            user_rate_ISAC_tmp = log2(1 + ((gamma_0 * num_antenna * p_max - (z_target * sensing_th)) * inv_pos(z_user_tmp)));
     
             user_rate_ISAC_sum(k,:) = sum(E(num_target * k - num_target + 1 : num_target * k,:) .* (user_rate_ISAC_tmp - user_rate_comm(k,:)));
         end

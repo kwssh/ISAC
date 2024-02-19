@@ -18,9 +18,11 @@ function [A, E] = get_period_tmp(A_bar, E_bar, num_antenna, p_max, distance_user
         expressions sum_rate
         expressions user_rate_th(num_user, N)
 
-        A = X(1:num_user, :);
+        A = X(1 : num_user, :);
         E = X(num_user + 1 : end, :);
 
+        user_rate_th = get_user_rate(gamma_0, num_antenna, p_max, distance_user, num_user, distance_target, num_target, E, sensing_th, A, user_rate_ISAC_sum);
+        
         user_rate_comm = log2(1 + (gamma_0 * num_antenna * p_max ./ (distance_user .* distance_user)));
     
         for k = 1 : num_user
@@ -45,15 +47,15 @@ function [A, E] = get_period_tmp(A_bar, E_bar, num_antenna, p_max, distance_user
 
                 sum_rate = sum_rate + user_rate;
 
-                rate_th_tmp(1,1) = user_rate_comm(k,n) / N;
-                rate_th_tmp(2:end,1) = rate_diff;
-                rate_th_tmp(1,2:end) = rate_diff';
+                % rate_th_tmp(1,1) = user_rate_comm(k,n) / N;
+                % rate_th_tmp(2:end,1) = rate_diff;
+                % rate_th_tmp(1,2:end) = rate_diff';
+                % 
+                % [eig_vec, eig_val] = eig(rate_th_tmp);
+                % eig_val(eig_val < 0) = 0;
+                % rate_th_tmp_new = eig_vec * eig_val / (eig_vec);
 
-                [eig_vec, eig_val] = eig(rate_th_tmp);
-                eig_val(eig_val < 0) = 0;
-                rate_th_tmp_new = eig_vec * eig_val / (eig_vec);
-
-                user_rate_th(k, n) = x' * rate_th_tmp_new * x;
+                % user_rate_th(k, n) = x' * rate_th_tmp_new * x;
             end
         end
 
@@ -74,7 +76,7 @@ function [A, E] = get_period_tmp(A_bar, E_bar, num_antenna, p_max, distance_user
             for l = 1 : L
                 sum(E_sum_user(:,(l-1) * N_L + 1 : l * N_L), 2) == 1;
 
-                % sum(user_rate_th(:,(l-1) * N_L + 1 : l * N_L), 2) / N_L >= rate_th;
+                sum(user_rate_th(:,(l-1) * N_L + 1 : l * N_L), 2) / N_L >= rate_th;
             end
 
             sum(E_sum_user) <= 1;

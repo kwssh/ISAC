@@ -1,4 +1,4 @@
-function [A, E] = get_period(A_bar, E_bar, channel_gain, noise_power, num_antenna, p_max, distance_user, num_user, distance_target, num_target, sensing_th, N, eta, N_L, L, rate_th)
+function [A, E] = get_period(A_bar, E_bar, num_antenna, p_max, distance_user, num_user, distance_target, num_target, sensing_th, N, eta, N_L, L, rate_th, gamma_0)
 
     cvx_begin
 
@@ -11,7 +11,7 @@ function [A, E] = get_period(A_bar, E_bar, channel_gain, noise_power, num_antenn
         expressions user_rate_ISAC_sum(num_user, N)
         expressions beam_pattern_gain
 
-        user_rate_left_tmp = get_user_rate(channel_gain, noise_power, num_antenna, p_max, distance_user, num_user, distance_target, num_target, E, sensing_th, A, user_rate_ISAC_sum);
+        user_rate_left_tmp = get_user_rate(gamma_0, num_antenna, p_max, distance_user, num_user, distance_target, num_target, E, sensing_th, A, user_rate_ISAC_sum);
         user_rate_left = sum(sum(user_rate_left_tmp)) / N;
 
         user_rate_A_tmp = pow_pos(abs(A .* (1 - A_bar)),2) + pow_pos(abs(A - A_bar),2);
@@ -39,7 +39,7 @@ function [A, E] = get_period(A_bar, E_bar, channel_gain, noise_power, num_antenn
             for l = 1 : L
                 sum(E_sum_user(:,(l-1) * N_L + 1 : l * N_L), 2) == 1;
 
-                sum(user_rate_left_tmp(:,(l-1) * N_L + 1 : l * N_L), 2) / N_L >= rate_th;
+                % sum(user_rate_left_tmp(:,(l-1) * N_L + 1 : l * N_L), 2) / N_L >= rate_th;
             end
 
             sum(E_sum_user) <= 1;

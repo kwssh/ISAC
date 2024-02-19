@@ -1,6 +1,4 @@
-function user_rate = get_user_rate(channel_gain, noise_power, num_antenna, p_max, distance_user, num_user, distance_target, num_target, E, sensing_th, A, user_rate_ISAC_sum)
-
-    gamma_0 = channel_gain / noise_power;
+function user_rate = get_user_rate(gamma_0, num_antenna, p_max, distance_user, num_user, distance_target, num_target, E, sensing_th, A, user_rate_ISAC_sum)
 
     user_rate_comm = log2(1 + (gamma_0 * num_antenna * p_max ./ (distance_user .* distance_user)));
     
