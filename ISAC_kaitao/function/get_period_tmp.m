@@ -2,6 +2,7 @@ function [A, E] = get_period_tmp(A_bar, E_bar, num_antenna, p_max, distance_user
 
     rate_tmp = zeros(1 + num_target);
     rate_th_tmp = zeros(1 + num_target);
+    scaling = 10000;
     
     cvx_begin
 
@@ -33,16 +34,16 @@ function [A, E] = get_period_tmp(A_bar, E_bar, num_antenna, p_max, distance_user
 
                 x = [A(k,n) ; E(num_target * k - num_target + 1 : num_target * k,n)];
 
-                rate_diff = (user_rate_ISAC_tmp(:,n) - user_rate_comm(k,n)) / 2;
+                rate_diff = (user_rate_ISAC_tmp(:,n) - user_rate_comm(k,n)) / 2 * scaling;
                 
-                rate_tmp(1,1) = user_rate_comm(k,n) / N - ((1-A_bar(k,n))^2 + 1) / (2 * eta);
+                rate_tmp(1,1) = user_rate_comm(k,n) / N - ((1-A_bar(k,n))^2 + 1) / (2 * eta) * scaling;
                 rate_tmp(2:end,1) = rate_diff;
                 rate_tmp(1,2:end) = rate_diff';
-                rate_tmp(2:end,2:end) = diag(-((1 - E_bar(num_target * k - num_target + 1 : num_target * k,n)).^2 + 1) / (2 * eta));
+                rate_tmp(2:end,2:end) = diag(-((1 - E_bar(num_target * k - num_target + 1 : num_target * k,n)).^2 + 1) / (2 * eta)) * scaling;
                 
                 user_rate_quad = x' * rate_tmp * x;
-                user_rate_linear = [A_bar(k,n) E_bar(num_target * k - num_target + 1 : num_target * k,n)'] * x / eta;
-                user_rate_const = -sum([A_bar(k,n) E_bar(num_target * k - num_target + 1 : num_target * k,n)'].^2) / (2 * eta);
+                user_rate_linear = [A_bar(k,n) E_bar(num_target * k - num_target + 1 : num_target * k,n)'] * x / eta * scaling;
+                user_rate_const = -sum([A_bar(k,n) E_bar(num_target * k - num_target + 1 : num_target * k,n)'].^2) / (2 * eta) * scaling;
                 user_rate = user_rate_quad + user_rate_linear + user_rate_const;
 
                 sum_rate = sum_rate + user_rate;
