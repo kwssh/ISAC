@@ -23,10 +23,10 @@ function [R, X_DL, X_UL] = get_transmit_precoder_sensing(channel_user_DL, channe
     
             for n = 1 : N
         
-                W_sum = sum(W(:,:,1:num_user), 3);
+                W_sum = sum(W(:,:,1:num_user,n), 3);
 
-                R_sum_old = sum(R_old(:,:,1:num_target), 3);
-                R_sum_new(:,:,n) = sum(R(:,:,1:num_target), 3);
+                R_sum_old = sum(R_old(:,:,1:num_target,n), 3);
+                R_sum_new(:,:,n) = sum(R(:,:,1:num_target,n), 3);
         
                 for k = 1 : num_user
         

@@ -33,7 +33,7 @@ function sum_rate_final = qwer()
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
     PARAM.T = 25;
-    PARAM.N = 25;
+    PARAM.N = 3;
     PARAM.TAU = PARAM.T / PARAM.N;
 
     PARAM.LoS_C = 10;
@@ -73,10 +73,12 @@ function sum_rate_final = qwer()
         distance_user_old = get_distance(PARAM.USER, uav_old);
         distance_target_old = get_distance(PARAM.TARGET, uav_old);
     
-        [channel_user_DL, channel_user_UL, channel_target, channel_target_diff] = get_channel(PARAM.LoS_C, PARAM.LoS_D, PARAM.LoS_K, PARAM.CHANNEL_GAIN, PARAM.NUM_ANTENNA, distance_user_old, uav_old, distance_target_old, PARAM.RCS);
+        [channel_user_DL, channel_user_UL, channel_target, channel_target_diff, channel_user_hat_DL, channel_user_hat_UL, channel_target_hat] = get_channel(PARAM.LoS_C, PARAM.LoS_D, PARAM.LoS_K, PARAM.CHANNEL_GAIN, PARAM.NUM_ANTENNA, distance_user_old, uav_old, distance_target_old, PARAM.RCS);
         W_new = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_old, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0);
         V_new = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_UL);
         [R_new, X_DL_new, X_UL_new] = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_new, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, channel_target_diff, PARAM.SENSING_TH, PARAM.RCS, distance_target_old, X_DL_old, X_UL_old);
+        uav_new = get_trajectory(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_new, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, channel_target_diff, PARAM.SENSING_TH, PARAM.RCS, distance_target_old, X_DL_old, X_UL_old);
+        
     
     
     end

@@ -24,10 +24,10 @@ function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel
     
             for n = 1 : N
         
-                W_sum_old = sum(W_old(:,:,1:num_user), 3);
-                W_sum_new(:,:,n) = sum(W(:,:,1:num_user), 3);
+                W_sum_old = sum(W_old(:,:,1:num_user,n), 3);
+                W_sum_new(:,:,n) = sum(W(:,:,1:num_user,n), 3);
     
-                R_sum = sum(R(:,:,1:num_target), 3);
+                R_sum = sum(R(:,:,1:num_target,n), 3);
         
                 for k = 1 : num_user
         

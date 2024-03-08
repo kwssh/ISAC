@@ -21,8 +21,8 @@ function V = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_
     
             for n = 1 : N
         
-                W_sum = sum(W(:,:,1:num_user), 3);
-                R_sum = sum(R(:,:,1:num_target), 3);
+                W_sum = sum(W(:,:,1:num_user,n), 3);
+                R_sum = sum(R(:,:,1:num_target,n), 3);
         
                 for k = 1 : num_user
         
