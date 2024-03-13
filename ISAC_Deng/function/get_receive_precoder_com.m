@@ -1,10 +1,10 @@
-function V = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W, R, V_old, PSI, noise_power, PEAK, DURATION, RATE_TH_UL)
+function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W, R, V_old, PSI, noise_power, PEAK, DURATION, RATE_TH_UL)
     
     N = size(channel_user_DL, 4);
     num_user = size(channel_user_DL, 3);
     num_target = size(R, 3);
     num_antenna = size(R, 1);
-    num_episode = 10^6;
+    num_episode = 1;
     objective_val = zeros(num_episode, 1);
 
     for episode = 1 : num_episode

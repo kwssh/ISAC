@@ -1,10 +1,10 @@
-function [R, X_DL, X_UL] = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W, R_old, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0, channel_target_diff, SENSING_TH, RCS, distance_target, X_DL_old, X_UL_old)
+function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W, R_old, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0, channel_target_diff, SENSING_TH, RCS, distance_target, X_DL_old, X_UL_old)
     
     N = size(channel_user_DL, 4);
     num_user = size(channel_user_DL, 3);
     num_target = size(R_old, 3);
     num_antenna = size(R_old, 1);
-    num_episode = 10^6;
+    num_episode = 1;
     objective_val = zeros(num_episode, 1);
 
     for episode = 1 : num_episode

@@ -1,15 +1,14 @@
-function uav = get_trajectory(channel_user_DL_hat, channel_user_UL_hat, channel_target_hat, W, R, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0, distance_user_old, distance_target_old, USER, TARGET, theta_old)
+function uav = get_trajectory(channel_user_DL_hat, channel_user_UL_hat, channel_target_hat, W, R, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0, distance_user_old, distance_target_old, USER, TARGET, theta_old, channel_target_diff, RCS, sensing_th)
     
     N = size(channel_user_DL_hat, 4);
     num_user = size(channel_user_DL_hat, 3);
     num_target = size(R, 3);
-    num_antenna = size(R, 1);
     num_episode = 10^6;
     objective_val = zeros(num_episode, 1);
 
     for episode = 1 : num_episode
 
-        [E_DL, F_DL, M_UL_1, M_UL_2] = deal(zeros(num_user, N));
+        [E_DL, F_DL] = deal(zeros(num_user, N));
         E_UAV = 0;
         
         cvx_begin
@@ -18,7 +17,8 @@ function uav = get_trajectory(channel_user_DL_hat, channel_user_UL_hat, channel_
             variable uav(N, 3)
             variable eta_user(num_user, N)
             variable eta_target(num_target, N)
-            variable theta(N, 1)
+            variable theta(N-1, 1)
+            variable v_xy_slack(N-1, 1)
             
             expressions objectve(num_user, N)
             expressions distance_user(num_user, N)
@@ -32,14 +32,17 @@ function uav = get_trajectory(channel_user_DL_hat, channel_user_UL_hat, channel_
             expressions gamma_low_UL(num_user, N)
             expressions gamma_low_UL_E(num_user, N)
             expressions gamma_low_UL_F(num_user, N)
+
+            expressions M_UL_1(num_user, N)
+            expressions M_UL_2(num_user, N)
     
-            distance_user = get_distance(USER, uav);
-            distance_target = get_distance(TARGET, uav);
+            distance_user = get_distance_cvx(USER, uav, distance_user);
+            distance_target = get_distance_cvx(TARGET, uav, distance_target);
     
             for n = 1 : N
     
                 W_sum = sum(W(:,:,1:num_user,n), 3);
-                R_sum = sum(R(:,:,1:num_user,n), 3);
+                R_sum = sum(R(:,:,1:num_target,n), 3);
     
                 for k = 1 : num_user
                     interference_user_tmp_DL = 0;
@@ -98,18 +101,27 @@ function uav = get_trajectory(channel_user_DL_hat, channel_user_UL_hat, channel_
     
                 for j = 1 : num_target
                     1 / exp(eta_target(j,n)) <= uav_old(n, 3)^2 + norm([uav_old(n,1) - TARGET(j,1), uav_old(n,2) - TARGET(j,2)])^2 + 2 * uav_old(n,3) * (uav(n,3) - uav_old(n,3)) + 2 * (uav_old(n,1:2) - TARGET(j,1:2)) .* (uav(n,1:2) - uav_old(n,1:2));
+                
+                    RCS_abs = abs(RCS);
+                    PSI(n) * (noise_power / (2 * (RCS_abs / distance_target(j,n)^2) * channel_target_diff(:,:,j,n)' * channel_target_diff(:,:,j,n) * R(:,:,j,n))) <= PSI(n) * sensing_th;
+
                 end
 
                 E_UAV_beam_tmp = DURATION * real(trace(W_sum + PSI(n) * R_sum(:,:,n)));
 
                 if n < N
-                    v_xy = (norm([uav_old(n,1) - uav_old(n+1,1), uav_old(n,2) - uav_old(n+1,2)])) / (DURATION * 2);
-                    v_z = (norm(uav_old(n,3) - uav_old(n+1,3))) / (DURATION * 2);
+                    v_xy_old = (norm([uav_old(n,1) - uav_old(n+1,1), uav_old(n,2) - uav_old(n+1,2)])) / (DURATION * 2);
+
+                    v_xy = (norm([uav(n,1) - uav(n+1,1), uav(n,2) - uav(n+1,2)])) / (DURATION * 2);
+                    v_z = (norm(uav(n,3) - uav(n+1,3))) / (DURATION * 2);
 
                     v_xy <= V_MAX_xy;
                     v_z <= V_MAX_z;
     
                     E_UAV_tmp = (P_0 * (1 + 3 * v_xy^2 / U_TIP^2) + P_1 * theta(n, 1) + C_0 * (v_xy)^3 + G_0 * v_z) * 2 * DURATION;
+                    
+                    v_xy_slack(n, 1) >= v_xy;
+                    pow_p(theta(n, 1), -2) <= theta_old(n, 1)^2 + v_xy_old^2 / V_0^2 + 2 * theta_old(n, 1) * (theta(n, 1) - theta_old(n, 1)) + 2 * v_xy_old / V_0^2 * (v_xy_slack(n, 1) - v_xy_old(n, 1));
                 end
     
                 E_UAV = E_UAV + E_UAV_beam_tmp + E_UAV_tmp;
@@ -120,14 +132,26 @@ function uav = get_trajectory(channel_user_DL_hat, channel_user_UL_hat, channel_
                     uav(1,:) = UAV_INIT;
                     uav(N,:) = UAV_FIN;
                 end
-
-
             end
 
             E_UAV <= P_UAV;
     
             maximize(sum(sum(objective)))
 
+        cvx_end
 
+        objective_val(episode) = sum(sum(objective));
+
+        if episode >= 2
+            if objective_val(episode) - objective_val(episode - 1) <= 0.01
+                break
+            end
+        end
+
+        uav_old = uav;
+        theta_old = theta;
+
+        distance_user_old = get_distance(USER, uav_old);
+        distance_target_old = get_distance(TARGET, uav_old);
     end
 end
