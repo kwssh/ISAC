@@ -4,7 +4,7 @@ function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, cha
     num_user = size(channel_user_DL, 3);
     num_target = size(R, 3);
     num_antenna = size(R, 1);
-    num_episode = 1;
+    num_episode = 10^6;
     objective_val = zeros(num_episode, 1);
 
     for episode = 1 : num_episode
@@ -83,7 +83,7 @@ function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, cha
                         delta_UL_tmp_new >= RATE_TH_UL * (interference_user_tmp_UL_new + interference_target_tmp_UL_new + noise_power);
     
                         V(:,:,k,n) == hermitian_semidefinite(num_antenna);
-                        real(trace(V(:,:,k,n))) == 1;
+                        % real(trace(V(:,:,k,n))) == 1;
                 end
             end
     

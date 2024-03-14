@@ -9,7 +9,7 @@ function sum_rate_final = qwer()
 
     PARAM.NUM_USER = 4;
     PARAM.NUM_TARGET = 2;
-    PARAM.NUM_ANTENNA = 4;
+    PARAM.NUM_ANTENNA = 6;
     PARAM.NUM_EPISODE = 100;
 
     PARAM.USER = [-100 -100; -30 -100; 30 -100; 100 -100];
@@ -71,7 +71,11 @@ function sum_rate_final = qwer()
 
             [channel_user_DL, channel_user_UL, channel_target, channel_target_diff, ~, ~, ~] = get_channel(PARAM.LoS_C, PARAM.LoS_D, PARAM.LoS_K, PARAM.CHANNEL_GAIN, PARAM.NUM_ANTENNA, distance_user_old, uav_old, distance_target_old, PARAM.RCS, channel_n_LoS_user_DL, channel_n_LoS_user_UL, channel_n_LoS_target, PARAM.SCALING);
 
-            [W_old, R_old, V_old] = get_init(channel_user_DL, channel_user_UL, channel_target, channel_target_diff, PARAM.PSI, distance_target_old, PARAM.NOISE_POWER_SCALING, PARAM.SENSING_TH, PARAM.RCS, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.PEAK, PARAM.P_MAX, PARAM.SCALING);
+            % [W_old, R_old, V_old] = get_init(channel_user_DL, channel_user_UL, channel_target, channel_target_diff, PARAM.PSI, distance_target_old, PARAM.NOISE_POWER_SCALING, PARAM.SENSING_TH, PARAM.RCS, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.PEAK, PARAM.P_MAX, PARAM.SCALING);
+        
+            W_old = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
+            V_old = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
+            R_old = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_TARGET, PARAM.N);
         end
 
         distance_user_old = get_distance(PARAM.USER, uav_old);
