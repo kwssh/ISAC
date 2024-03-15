@@ -74,7 +74,7 @@ function [channel_matrix_user_DL, channel_matrix_user_UL, channel_matrix_target,
             channel_matrix_target(:, :, j, n) = RCS * channel_matrix_target_tmp / (2 * distance_target(j, n)) * scaling;
             
 
-            channel_matrix_target_diff(:, :, j, n) = (prob_LoS_target_dev(j, n) * channel_LoS_target + sqrt(prob_LoS_target(j, n)) * channel_LoS_target .* steering_target_diff + prob_n_LoS_target_dev(j, n) * sqrt(K) * channel_n_LoS_target(:,:,j,n)) * scaling;
+            channel_matrix_target_diff(:, :, j, n) = (prob_LoS_target_dev(j, n) * channel_LoS_target + sqrt(prob_LoS_target(j, n)) * channel_LoS_target .* steering_target_diff + prob_n_LoS_target_dev(j, n) * sqrt(K) * channel_n_LoS_target(:,:,j,n));
         end
     end
 end

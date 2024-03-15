@@ -4,7 +4,7 @@ function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, cha
     num_user = size(channel_user_DL, 3);
     num_target = size(R_old, 3);
     num_antenna = size(R_old, 1);
-    num_episode = 1;
+    num_episode = 10^6;
     objective_val = zeros(num_episode, 1);
 
     for episode = 1 : num_episode
@@ -71,13 +71,12 @@ function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, cha
 
                         delta_DL_tmp >= (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power)^2 / (2 * theta_DL) + theta_DL * X_DL_old(k,n)^2 / 2;
                         delta_UL_tmp >= (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power)^2 / (2 * theta_UL) + theta_UL * X_UL_old(k,n)^2 / 2;
-
                 end
 
                 for j = 1 : num_target
                     R(:,:,j,n) == hermitian_semidefinite(num_antenna);
 
-                    PSI(n) * real(trace(channel_target_diff(:,:,j,n)' * channel_target_diff(:,:,j,n) * R(:,:,j,n))) >= PSI(n) * noise_power / (2 * SENSING_TH * (RCS / (2 * distance_target(j,n))^2));
+                    PSI(n) * real(trace(channel_target_diff(:,:,j,n)' * channel_target_diff(:,:,j,n) * R(:,:,j,n))) >= PSI(n) * noise_power / (2 * SENSING_TH * (abs(RCS / (2 * distance_target(j,n)))^2));
                 end
 
                 real(trace(W_sum + PSI(n) * R_sum_new(:,:,n))) <= P_MAX;
@@ -103,7 +102,7 @@ function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, cha
         objective_val(episode) = sum(sum(objective));
 
         if episode >= 2
-            if objective_val(episode) - objective_val(episode - 1) <= 0.01
+            if abs(objective_val(episode) - objective_val(episode - 1)) <= 0.01
                 break
             end
         end

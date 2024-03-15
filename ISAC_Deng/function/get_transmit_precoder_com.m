@@ -116,7 +116,7 @@ function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel
         objective_val(episode) = sum(sum(objective));
 
         if episode >= 2
-            if objective_val(episode) - objective_val(episode - 1) <= 0.01
+            if abs(objective_val(episode) - objective_val(episode - 1)) <= 0.1
                 break
             end
         end
