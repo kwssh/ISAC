@@ -35,12 +35,14 @@ function [channel_matrix_user_DL, channel_matrix_user_UL, channel_matrix_target,
         theta_user(:, n) = asin(uav(n, 3) ./ distance_user(:, n));
         theta_target(:, n) = asin(uav(n, 3) ./ distance_target(:, n));
 
+        prob_target_tmp = C * exp(-D * (180 / pi) * theta_target(:, n) + D * C);
+        
         prob_LoS_user(:, n) = 1 ./ (1 + C * exp(-D * ((180 / pi)* theta_user(:, n) - C)));
         prob_n_LoS_user(:, n) = 1 - prob_LoS_user(:, n);
 
         prob_LoS_target(:, n) = 1 ./ (1 + C * exp(-D * ((180 / pi)* theta_target(:, n) - C)));
         prob_LoS_target_dev(:, n) = 0.5 * (1 + C * exp(-D * ((180 / pi)* theta_target(:, n) - C))) .^ (-1.5) .* (C * D * exp(-D * ((180 / pi)* theta_target(:, n) - C)));
-        prob_n_LoS_target_dev(:, n) = -0.5 * (1 - (1 + C * exp(-D * ((180 / pi) * theta_target(:, n) - C))) .^ (-1)) .^ (-0.5) .* (C * D * exp(-D * ((180 / pi) *theta_target(:, n) - C))) .* (1 + C * exp(-D * ((180 / pi) * theta_target(:, n) - C)));
+        prob_n_LoS_target_dev(:, n) = -0.5 * D * prob_target_tmp^(0.5) / ((1 + prob_target_tmp)^(1.5));
 
         prob_n_LoS_target(:, n) = 1 - prob_LoS_target(:, n);
 

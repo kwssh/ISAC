@@ -14,9 +14,12 @@ function [W, R, V] = get_init(channel_user_DL, channel_user_UL, channel_target, 
 
         variable W(num_antenna, num_antenna, num_user, N) complex
         variable R(num_antenna, num_antenna, num_target, N) complex
+        % variable V(num_antenna, num_antenna, num_user, N) complex
 
         expressions R_sum(num_antenna, num_antenna, N)
         expressions W_sum(num_antenna, num_antenna, N)
+        expressions interference_DL(num_user, N)
+        expressions interference_UL(num_user, N)
 
         for n = 1 : N
            
@@ -33,7 +36,7 @@ function [W, R, V] = get_init(channel_user_DL, channel_user_UL, channel_target, 
 
                 V_tmp_tmp = rand(num_antenna, 1) + 1i * rand(num_antenna, 1);
                 V_tmp = V_tmp_tmp ./ abs(V_tmp_tmp);
-                V(:,:,k,n) = V_tmp * V_tmp';
+                V(:,:,k,n) = (V_tmp * V_tmp') / num_antenna;
 
                 for i = 1 : num_user
                     if i == k
@@ -45,7 +48,7 @@ function [W, R, V] = get_init(channel_user_DL, channel_user_UL, channel_target, 
 
                 for j = 1 : num_target
                     alpha_sensing = abs(RCS / (2 * distance_target(j,n)));
-                    PSI(n) * real(trace(channel_target_diff(:,:,j,n)' * channel_target_diff(:,:,j,n) * R(:,:,j,n))) >= PSI(n) * (noise_power / scaling) / (2 * sensing_th * alpha_sensing^2);
+                    PSI(n) * real(trace(channel_target_diff(:,:,j,n)' * channel_target_diff(:,:,j,n) * R(:,:,j,n))) >= PSI(n) * (noise_power /scaling) / (2 * sensing_th * alpha_sensing^2);
     
                     interference_target_tmp_DL = interference_target_tmp_DL + PSI(n) * real(trace(channel_user_DL(:,:,k,n) * R(:,:,j,n)));
                     interference_target_tmp_UL = interference_target_tmp_UL + PSI(n) * real(trace(channel_target(:,:,j,n)' * V(:,:,k,n) * channel_target(:,:,j,n) * (W_sum(:,:,n) + R_sum(:,:,n))));
@@ -53,11 +56,12 @@ function [W, R, V] = get_init(channel_user_DL, channel_user_UL, channel_target, 
                     R(:,:,j,n) == hermitian_semidefinite(num_antenna);
                 end
 
-                interference_DL = interference_user_tmp_DL + interference_target_tmp_DL + noise_power;
-                interference_UL = interference_user_tmp_UL + interference_target_tmp_UL + noise_power;
+                interference_DL(k,n) = interference_user_tmp_DL + interference_target_tmp_DL + noise_power;
+                interference_UL(k,n) = interference_user_tmp_UL + interference_target_tmp_UL + noise_power;
 
-                real(trace(channel_user_DL(:,:,k,n) * W(:,:,k,n))) >= rate_th_DL * interference_DL;
-                PEAK * real(trace(channel_user_UL(:,:,k,n) * V(:,:,k,n))) >= rate_th_UL * interference_UL;
+                real(trace(channel_user_DL(:,:,k,n) * W(:,:,k,n))) >= rate_th_DL * interference_DL(k,n);
+                PEAK * real(trace(channel_user_UL(:,:,k,n) * V(:,:,k,n))) >= rate_th_UL * interference_UL(k,n);
+
                 W(:,:,k,n) == hermitian_semidefinite(num_antenna);
             end
 

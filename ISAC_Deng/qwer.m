@@ -5,21 +5,21 @@ function sum_rate_final = qwer()
     rng(123);
     
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
-    PARAM.SCALING = 0.1;
-    PARAM.SCALING_2 = 10^2;
+    PARAM.SCALING = 1000000;
 
-    PARAM.NUM_USER = 4;
-    PARAM.NUM_TARGET = 2;
+    PARAM.NUM_USER = 1;
+    PARAM.NUM_TARGET = 1;
     PARAM.NUM_ANTENNA = 6;
     PARAM.NUM_EPISODE = 100;
 
-    PARAM.USER = [-100 -100; -30 -100; 30 -100; 100 -100];
-    PARAM.UAV_START = [-100 0];
-    PARAM.UAV_END = [100 0];
+    % PARAM.USER = [-50 -10; -30 -10; 30 -10; 50 -10];
+    PARAM.USER = [-10 0];
+    PARAM.UAV_START = [-50 0];
+    PARAM.UAV_END = [50 0];
     PARAM.UAV_Z_MIN = 40;
     PARAM.UAV_Z_MAX = 100;
     % PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
-    PARAM.TARGET = [-50 50; 50 50];
+    PARAM.TARGET = [10 0];
 
     PARAM.NOISE_POWER = 10^(-14);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING;
@@ -37,12 +37,12 @@ function sum_rate_final = qwer()
     PARAM.LoS_D = 0.6;
     PARAM.LoS_K = 0.2;
 
-    PARAM.RCS = 2 * 10^(-5) * (1 + 1i);
-    % PARAM.RCS = 25 * sqrt(2) * (1 + 1i);
+    % PARAM.RCS = 2 * 10^(-5) * (1 + 1i);
+    PARAM.RCS = 25 * sqrt(2) * (1 + 1i);
 
     PARAM.PEAK = 10^(-0.5);
-    PARAM.PSI = zeros(PARAM.N, 1);
-    PARAM.PSI(1:2:end) = 1;
+    PARAM.PSI = ones(PARAM.N, 1);
+    % PARAM.PSI(1:2:end) = 1;
 
     PARAM.RATE_TH_DL = 10^(0.03);
     PARAM.RATE_TH_UL = 10^(0.03);
@@ -86,8 +86,8 @@ function sum_rate_final = qwer()
     
         [channel_user_DL, channel_user_UL, channel_target, channel_target_diff, channel_user_hat_DL, channel_user_hat_UL, channel_target_hat] = get_channel(PARAM.LoS_C, PARAM.LoS_D, PARAM.LoS_K, PARAM.CHANNEL_GAIN, PARAM.NUM_ANTENNA, distance_user_old, uav_old, distance_target_old, PARAM.RCS, channel_n_LoS_user_DL, channel_n_LoS_user_UL, channel_n_LoS_target, PARAM.SCALING);
         W_new = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_old, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER_SCALING, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0);
-        [V_new, X_DL_old, X_UL_old] = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER_SCALING, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_UL);
-        R_new = get_transmit_precoder_sensing(channel_user_DL / PARAM.SCALING * PARAM.SCALING_2, channel_user_UL / PARAM.SCALING * PARAM.SCALING_2, channel_target / PARAM.SCALING * PARAM.SCALING_2, W_new, R_old, V_new, PARAM.PSI, PARAM.NOISE_POWER_SCALING / PARAM.SCALING * PARAM.SCALING_2, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, channel_target_diff / PARAM.SCALING * PARAM.SCALING_2, PARAM.SENSING_TH, PARAM.RCS, distance_target_old, X_DL_old, X_UL_old);
+        [V_new, X_DL_old, X_UL_old] = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER_SCALING, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_UL, PARAM.SCALING);
+        R_new = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_new, PARAM.PSI, PARAM.NOISE_POWER_SCALING, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, channel_target_diff, PARAM.SENSING_TH, PARAM.RCS, distance_target_old, X_DL_old, X_UL_old);
         uav_new = get_trajectory(channel_user_hat_DL, channel_user_hat_UL, channel_target_hat, W_old, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER_SCALING, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, distance_user_old, distance_target_old, PARAM.USER, PARAM.TARGET, theta_old, channel_target_diff, PARAM.RCS, PARAM.SENSING_TH);
 
     

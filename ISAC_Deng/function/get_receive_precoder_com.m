@@ -1,4 +1,4 @@
-function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W, R, V_old, PSI, noise_power, PEAK, DURATION, RATE_TH_UL)
+function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W, R, V_old, PSI, noise_power, PEAK, DURATION, RATE_TH_UL, scaling)
     
     N = size(channel_user_DL, 4);
     num_user = size(channel_user_DL, 3);
@@ -15,10 +15,12 @@ function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, cha
             cvx_solver Mosek
     
             variable V(num_antenna, num_antenna, num_user, N) complex
+
             expressions C_UL_new(num_user, N)
             expressions D_UL_new(num_user, N)
             expressions objective(num_user, N)
-    
+            expressions delta_UL_tmp_new(num_user, N)
+
             for n = 1 : N
         
                 W_sum = sum(W(:,:,1:num_user,n), 3);
@@ -56,7 +58,7 @@ function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, cha
                     delta_DL_tmp = real(trace(channel_user_DL(:,:,k,n) * W(:,:,k,n)));
     
                     delta_UL_tmp = PEAK * real(trace(channel_user_UL(:,:,k,n) * V_old(:,:,k,n)));
-                    delta_UL_tmp_new = PEAK * real(trace(channel_user_UL(:,:,k,n) * V(:,:,k,n)));
+                    delta_UL_tmp_new(k,n) = PEAK * real(trace(channel_user_UL(:,:,k,n) * V(:,:,k,n)));
     
                     delta_DL(k, n) = delta_DL_tmp / (interference_user_tmp_DL + interference_target_tmp_DL + noise_power);
                     delta_UL(k, n) = delta_UL_tmp / (interference_user_tmp_UL + interference_target_tmp_UL + noise_power);
@@ -65,10 +67,10 @@ function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, cha
                     D_DL(k, n) = delta_DL_tmp + interference_user_tmp_DL + interference_target_tmp_DL + noise_power;
         
                     C_UL(k, n) = DURATION * (1 + delta_UL(k, n)) * delta_UL_tmp;
-                    C_UL_new(k, n) = DURATION * (1 + delta_UL(k, n)) * delta_UL_tmp_new;
+                    C_UL_new(k, n) = DURATION * (1 + delta_UL(k, n)) * delta_UL_tmp_new(k,n);
     
                     D_UL(k, n) = delta_UL_tmp + interference_user_tmp_UL + interference_target_tmp_UL + noise_power;
-                    D_UL_new(k, n) = delta_UL_tmp_new + interference_user_tmp_UL_new + interference_target_tmp_UL_new + noise_power;
+                    D_UL_new(k, n) = delta_UL_tmp_new(k,n) + interference_user_tmp_UL_new + interference_target_tmp_UL_new + noise_power;
         
                     epsilon_DL(k, n) = sqrt(C_DL(k, n)) / D_DL(k, n);
                     epsilon_UL(k, n) = sqrt(C_UL(k, n)) / D_UL(k, n);
@@ -80,7 +82,7 @@ function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, cha
     
                     subject to
                         
-                        delta_UL_tmp_new >= RATE_TH_UL * (interference_user_tmp_UL_new + interference_target_tmp_UL_new + noise_power);
+                        delta_UL_tmp_new(k,n) >= RATE_TH_UL * (D_UL_new(k, n) - delta_UL_tmp_new(k,n));
     
                         V(:,:,k,n) == hermitian_semidefinite(num_antenna);
                         real(trace(V(:,:,k,n))) == 1;
@@ -97,9 +99,13 @@ function [V, delta_DL, delta_UL] = get_receive_precoder_com(channel_user_DL, cha
             if abs(objective_val(episode) - objective_val(episode - 1)) <= 0.01
                 break
             end
+        else
+            channel_user_DL = channel_user_DL / scaling * 10;
+            channel_user_UL = channel_user_UL / scaling * 10;
+            channel_target = channel_target / scaling * 10;
+            noise_power = noise_power / scaling * 10;
         end
 
         V_old = V;
-
     end
 end
