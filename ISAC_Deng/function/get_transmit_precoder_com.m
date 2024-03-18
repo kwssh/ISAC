@@ -1,4 +1,4 @@
-function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_old, R, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0)
+function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_old, R, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0, scaling)
     
     N = size(channel_user_DL, 4);
     num_user = size(channel_user_DL, 3);
@@ -87,8 +87,11 @@ function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel
     
                     subject to
                         
-                        delta_DL_tmp_new >= RATE_TH_DL * (interference_user_tmp_DL_new + interference_target_tmp_DL + noise_power);
-                        delta_UL_tmp >= RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power);
+                        (delta_DL_tmp_new) >= (RATE_TH_DL * (interference_user_tmp_DL_new + interference_target_tmp_DL + noise_power));
+                        (delta_UL_tmp) >= (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
+
+                        % scaling * (delta_DL_tmp_new) >= scaling * (RATE_TH_DL * (interference_user_tmp_DL_new + interference_target_tmp_DL + noise_power));
+                        % scaling * (delta_UL_tmp) >= scaling * (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
     
                         W(:,:,k,n) == hermitian_semidefinite(num_antenna);
                 end

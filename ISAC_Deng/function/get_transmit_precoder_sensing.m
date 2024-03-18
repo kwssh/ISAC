@@ -69,8 +69,8 @@ function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, cha
                         delta_DL_tmp >= RATE_TH_DL * (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power);
                         delta_UL_tmp >= RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power);
 
-                        delta_DL_tmp >= (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power)^2 / (2 * theta_DL) + theta_DL * X_DL_old(k,n)^2 / 2;
-                        delta_UL_tmp >= (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power)^2 / (2 * theta_UL) + theta_UL * X_UL_old(k,n)^2 / 2;
+                        delta_DL_tmp >= (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power)^2 / (2 * theta_DL) + theta_DL * X_DL(k,n)^2 / 2;
+                        delta_UL_tmp >= (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power)^2 / (2 * theta_UL) + theta_UL * X_UL(k,n)^2 / 2;
                 end
 
                 for j = 1 : num_target

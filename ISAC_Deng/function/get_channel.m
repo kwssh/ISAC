@@ -52,14 +52,14 @@ function [channel_matrix_user_DL, channel_matrix_user_UL, channel_matrix_target,
             channel_user_DL_tmp = sqrt(prob_LoS_user(k, n) * channel_gain) * (transpose(exp(steering_tmp_user))) + sqrt(prob_n_LoS_user(k, n) * channel_gain * K) * channel_n_LoS_user_DL(:, k, n);
             channel_user_DL(:, k, n) = channel_user_DL_tmp ./ distance_user(k, n);
             channel_her_user_DL(k, :, n) = channel_user_DL(:, k, n)';
-            channel_matrix_user_DL(:, :, k, n) = channel_user_DL(:, k, n) * channel_her_user_DL(k, :, n) * scaling;
-            channel_matrix_user_hat_DL(:, :, k, n) = channel_user_DL_tmp * channel_user_DL_tmp' * scaling;
+            channel_matrix_user_DL(:, :, k, n) = channel_user_DL(:, k, n) * channel_her_user_DL(k, :, n);
+            channel_matrix_user_hat_DL(:, :, k, n) = channel_user_DL_tmp * channel_user_DL_tmp';
 
             channel_user_UL_tmp = sqrt(prob_LoS_user(k, n) * channel_gain) * (transpose(exp(steering_tmp_user))) + sqrt(prob_n_LoS_user(k, n) * channel_gain * K) * channel_n_LoS_user_UL(:, k, n);
             channel_user_UL(:, k, n) = channel_user_UL_tmp ./ distance_user(k, n);
             channel_her_user_UL(k, :, n) = channel_user_UL(:, k, n)';
-            channel_matrix_user_UL(:, :, k, n) = channel_user_UL(:, k, n) * channel_her_user_UL(k, :, n) * scaling;
-            channel_matrix_user_hat_UL(:, :, k, n) = channel_user_UL_tmp * channel_user_UL_tmp' * scaling;
+            channel_matrix_user_UL(:, :, k, n) = channel_user_UL(:, k, n) * channel_her_user_UL(k, :, n);
+            channel_matrix_user_hat_UL(:, :, k, n) = channel_user_UL_tmp * channel_user_UL_tmp';
         end
 
         for j = 1 : num_target
@@ -72,8 +72,8 @@ function [channel_matrix_user_DL, channel_matrix_user_UL, channel_matrix_target,
             channel_LoS_target = channel_LoS_target_tmp * channel_LoS_target_tmp';
 
             channel_matrix_target_tmp = sqrt(prob_LoS_target(j, n)) * channel_LoS_target + sqrt(prob_n_LoS_target(j, n) * K) * channel_n_LoS_target(:,:,j,n);
-            channel_matrix_target_hat(:, :, j, n) = RCS * channel_matrix_target_tmp / (2) * scaling;
-            channel_matrix_target(:, :, j, n) = RCS * channel_matrix_target_tmp / (2 * distance_target(j, n)) * scaling;
+            channel_matrix_target_hat(:, :, j, n) = RCS * channel_matrix_target_tmp / (2);
+            channel_matrix_target(:, :, j, n) = RCS * channel_matrix_target_tmp / (2 * distance_target(j, n));
             
 
             channel_matrix_target_diff(:, :, j, n) = (prob_LoS_target_dev(j, n) * channel_LoS_target + sqrt(prob_LoS_target(j, n)) * channel_LoS_target .* steering_target_diff + prob_n_LoS_target_dev(j, n) * sqrt(K) * channel_n_LoS_target(:,:,j,n));
