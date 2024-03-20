@@ -5,6 +5,7 @@ function get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling
     degree_user = zeros(num_user, 1);
     degree_target = zeros(num_target, 1);
 
+    
     for i = 1 : num_user
         degree_user(i) = rad2deg(acos(uav_z / distance_user(i)));
     end
@@ -12,6 +13,7 @@ function get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling
     for j = 1 : num_target
         degree_target(j) = rad2deg(acos(uav_z / distance_target(j)));
     end
+
     
     degree = 0 : 1 : 360;
     num_distance = size(degree, 2);

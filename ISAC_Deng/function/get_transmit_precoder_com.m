@@ -6,6 +6,7 @@ function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel
     num_antenna = size(R, 1);
     num_episode = 10^6;
     objective_val = zeros(num_episode, 1);
+    W_opt = zeros(num_antenna, num_antenna, num_user, N);
     
     for episode = 1 : num_episode
 
@@ -88,11 +89,11 @@ function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel
     
                     subject to
                         
-                        (delta_DL_tmp_new) >= (RATE_TH_DL * (interference_user_tmp_DL_new + interference_target_tmp_DL + noise_power));
-                        (delta_UL_tmp) >= (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
+                        % (delta_DL_tmp_new) >= (RATE_TH_DL * (interference_user_tmp_DL_new + interference_target_tmp_DL + noise_power));
+                        % (delta_UL_tmp) >= (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
 
-                        % 10^4 * scaling * (delta_DL_tmp_new(k, n)) >= 10^4 * scaling * (RATE_TH_DL * (interference_user_tmp_DL_new + interference_target_tmp_DL + noise_power));
-                        % 10^4 * scaling * (delta_UL_tmp(k, n)) >= 10^4 * scaling * (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
+                        10^4 * scaling * (delta_DL_tmp_new(k, n)) >= 10^4 * scaling * (RATE_TH_DL * (interference_user_tmp_DL_new + interference_target_tmp_DL + noise_power));
+                        10^4 * scaling * (delta_UL_tmp(k, n)) >= 10^4 * scaling * (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
     
                         W(:,:,k,n) == hermitian_semidefinite(num_antenna);
                 end
@@ -125,6 +126,13 @@ function W = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel
             end
         end
 
-        W_old = W;
+        for n = 1 : N
+            for k = 1 : num_user
+                [V_W, D_W] = eig(W(:,:,k,n));
+                W_opt(:,:,k,n) = D_W(num_antenna, num_antenna) * V_W(:, num_antenna) * V_W(:, num_antenna)';
+            end
+        end
+
+        W_old = W_opt;
     end
 end

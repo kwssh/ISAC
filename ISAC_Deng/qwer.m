@@ -74,11 +74,8 @@ function sum_rate_final = qwer()
 
             [channel_user_DL, channel_user_UL, channel_target, channel_target_diff, ~, ~, ~] = get_channel(PARAM.LoS_C, PARAM.LoS_D, PARAM.LoS_K, PARAM.CHANNEL_GAIN, PARAM.NUM_ANTENNA, distance_user_old, uav_old, distance_target_old, PARAM.RCS, channel_n_LoS_user_DL, channel_n_LoS_user_UL, channel_n_LoS_target, PARAM.SCALING);
 
-            [W_old, R_old, V_old] = get_init(channel_user_DL, channel_user_UL, channel_target, channel_target_diff, PARAM.PSI, distance_target_old, PARAM.NOISE_POWER, PARAM.SENSING_TH, PARAM.RCS, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.PEAK, PARAM.P_MAX, PARAM.SCALING);
+            [W_old, R_old, V_old] = get_init(channel_user_DL * PARAM.SCALING, channel_user_UL * PARAM.SCALING, channel_target * sqrt(PARAM.SCALING), channel_target_diff, PARAM.PSI, distance_target_old, PARAM.NOISE_POWER * PARAM.SCALING, PARAM.SENSING_TH, PARAM.RCS, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.PEAK, PARAM.P_MAX, PARAM.SCALING);
         
-            % W_old = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
-            % V_old = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
-            % R_old = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_ANTENNA, PARAM.NUM_TARGET, PARAM.N);
         end
 
         distance_user_old = get_distance(PARAM.USER, uav_old);
@@ -87,7 +84,7 @@ function sum_rate_final = qwer()
         [channel_user_DL, channel_user_UL, channel_target, channel_target_diff, channel_user_hat_DL, channel_user_hat_UL, channel_target_hat] = get_channel(PARAM.LoS_C, PARAM.LoS_D, PARAM.LoS_K, PARAM.CHANNEL_GAIN, PARAM.NUM_ANTENNA, distance_user_old, uav_old, distance_target_old, PARAM.RCS, channel_n_LoS_user_DL, channel_n_LoS_user_UL, channel_n_LoS_target, PARAM.SCALING);
         W_new = get_transmit_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_old, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, PARAM.SCALING);
         [V_new, X_DL_old, X_UL_old] = get_receive_precoder_com(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_UL, PARAM.SCALING);
-        R_new = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_new, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, channel_target_diff, PARAM.SENSING_TH, PARAM.RCS, distance_target_old, X_DL_old, X_UL_old);
+        R_new = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W_new, R_old, V_new, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, channel_target_diff, PARAM.SENSING_TH, PARAM.RCS, distance_target_old, X_DL_old, X_UL_old, PARAM.SCALING);
         uav_new = get_trajectory(channel_user_hat_DL, channel_user_hat_UL, channel_target_hat, W_old, R_old, V_old, PARAM.PSI, PARAM.NOISE_POWER, PARAM.PEAK, PARAM.TAU / 2, PARAM.RATE_TH_DL, PARAM.RATE_TH_UL, PARAM.P_MAX, uav_old, PARAM.P_UAV, PARAM.P_0, PARAM.U_TIP, PARAM.P_1, PARAM.C_0, PARAM.V_0, PARAM.G_0, distance_user_old, distance_target_old, PARAM.USER, PARAM.TARGET, theta_old, channel_target_diff, PARAM.RCS, PARAM.SENSING_TH);
 
     

@@ -3,29 +3,31 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     format long
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
+    PARAM.SCALING_TMP = 1;
 
     PARAM.NUM_USER = 1;
-    PARAM.NUM_TARGET = 0;
+    PARAM.NUM_TARGET = 1;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 10^6;
 
-    PARAM.USER = [-100 -100;];
-    PARAM.UAV_START = [-100 0];
-    PARAM.UAV_END = [100 0];
+    PARAM.USER = [370 400];
+    PARAM.UAV_START = [450 525];
+    PARAM.UAV_END = [550 525];
     PARAM.UAV_Z = 100;
-    PARAM.TARGET = get_target(PARAM.NUM_TARGET);
+    % PARAM.TARGET = get_target(PARAM.NUM_TARGET);
+    PARAM.TARGET = [520 596];
     
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH = 5 * 10^-5;
+    PARAM.SENSING_TH = 10^(-4.3);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.5;
     PARAM.CHANNEL_GAIN = 10^(-6);
 
-    PARAM.T = 3;
-    PARAM.N = 3;
+    PARAM.T = 11;
+    PARAM.N = 11;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
     PARAM.V_MAX = 1000;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
@@ -191,104 +193,19 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
         
         %-----------------------------optimize UAV-----------------------------------------------------------------------------------------------------------------------------%
        
-        trust_region = PARAM.TRUST_REGION;
-
-        while(1)
-
-
-
-
-
-
-
-
-
-
-
+        
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
-            distance_user_t_tmp = zeros(PARAM.NUM_USER, PARAM.N);
-            channel_t_tmp = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.N);
-            channel_her_t_tmp = zeros(PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.N);
-            distance_target_t_tmp = zeros(PARAM.NUM_TARGET, PARAM.N);
-            steering_target_tmp = zeros(PARAM.NUM_ANTENNA, PARAM.NUM_TARGET, PARAM.N);
-            steering_target_her_tmp = zeros(PARAM.NUM_TARGET, PARAM.NUM_ANTENNA, PARAM.N);
-            
+        
+            uav_t = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
 
-            for n = 1 : PARAM.N
-                for k = 1 : PARAM.NUM_USER
-                    distance_user_t_tmp(k, n) = get_distance(uav_t(n, :), PARAM.USER(k,:), PARAM.UAV_Z);
-                    channel_t_tmp(:, k, n) = get_channel_tmp(uav_t(n, :), PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
-                    channel_her_t_tmp(k, :, n) = transpose(conj(channel_t_tmp(:, k, n)));
-                end
-            
-                for j = 1 : PARAM.NUM_TARGET
-                    distance_target_t_tmp(j, n) = get_distance(uav_t(n, :), PARAM.TARGET(j,:), PARAM.UAV_Z);
-                    steering_target_tmp(:, j, n) = get_steering(distance_target_t_tmp(j, n), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
-                    steering_target_her_tmp(j, :, n) = transpose(conj(steering_target_tmp(:, j, n)));
-                end
-            end
-
-
-            uav = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, channel_t_tmp, channel_her_t_tmp, steering_target_tmp, steering_target_her_tmp, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, distance_user_t_tmp.^2, PARAM.NOISE_POWER_SCALING, PARAM.USER, PARAM.UAV_Z);
-
-
-            %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            %-----------------------------get channel and steering with new UAV-----------------------------------------------------------------------------------------------------------------------------%
-            for n = 1 : PARAM.N
-                for k = 1 : PARAM.NUM_USER
-                    distance_user(k, n) = get_distance(uav(n, :), PARAM.USER(k,:), PARAM.UAV_Z);
-                    channel(:, k, n) = get_channel(uav(n, :), PARAM.USER(k,:), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
-                    channel_her(k, :, n) = transpose(conj(channel(:, k, n)));
-                end
-            
-                for j = 1 : PARAM.NUM_TARGET
-                    distance_target(j, n) = get_distance(uav(n, :), PARAM.TARGET(j,:), PARAM.UAV_Z);
-                    steering_target(:, j, n) = get_steering(distance_target(j, n), PARAM.SCALING, PARAM.UAV_Z, PARAM.NUM_ANTENNA);
-                    steering_target_her(j, :, n) = transpose(conj(steering_target(:, j, n)));
-                end
-            end
-            %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
-
-            [user_rate_current_UAV, error_current_UAV] = get_test_trajectory(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel, channel_her, PARAM.NOISE_POWER_SCALING, steering_target, steering_target_her, distance_target, PARAM.N);
-                                                          
-            %-----------------------------display part-----------------------------------------------------------------------------------------------------------------------------%
-            disp(['Episode           : ', num2str(episode)]);
-            disp(['Trust Region      : ', num2str(trust_region)]);
-            disp(['Previous Sum rate : ', num2str(sum(user_rate_prev_UAV))]);
-            disp(['Current Sum rate  : ', num2str(sum(user_rate_current_UAV))]);
-            disp(['Diff Sum rate     : ', num2str(sum(user_rate_current_UAV) - sum(user_rate_prev_UAV))]);
-            get_display(distance_user_t, 'Distance user     : ');
+              %-----------------------------display part-----------------------------------------------------------------------------------------------------------------------------%
+     
             get_display(uav_t, 'UAV position      : ');
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
-            if sum(user_rate_current_UAV(:, 2:PARAM.N-1)) > sum(user_rate_prev_UAV(:, 2:PARAM.N-1))
-                uav_t = uav;
-                trust_region = PARAM.TRUST_REGION;
-
-                user_rate_prev_UAV = user_rate_current_UAV;
-            else
-                trust_region = trust_region / 2;
-            end
-
-            if trust_region < 10^(-6)
-                break
-            end
-        end
+            
+            %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
         %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
@@ -310,7 +227,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
        
         user_rate_episode(:,:,episode) = user_rate_current;
 
-        if sum(sum(user_rate_current)) - sum(sum(user_rate_prev)) < 1e-6
+        if abs(sum(sum(user_rate_current)) - sum(sum(user_rate_prev))) < 1e-2
             break;
         end
 
@@ -319,6 +236,6 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     end
     %-----------------------------Epsiode End-----------------------------------------------------------------------------------------------------------------------------%
     
-    % get_received_BEAM_GAIN(W_opt, R_opt, num_user, num_antenna, sensing_th, scaling, distance_user_t, distance_target_t);
+    % get_received_BEAM_GAIN(W_opt(:,:,1,n), R_opt(:,:,n), PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.SENSING_TH_SCALING, PARAM.SCALING, distance_user_t(:, n), distance_target_t(:, n), PARAM.UAV_Z);
 
 end

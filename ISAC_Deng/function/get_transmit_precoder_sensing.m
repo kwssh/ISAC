@@ -1,4 +1,4 @@
-function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W, R_old, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0, channel_target_diff, SENSING_TH, RCS, distance_target, X_DL_old, X_UL_old)
+function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, channel_target, W, R_old, V, PSI, noise_power, PEAK, DURATION, RATE_TH_DL, RATE_TH_UL, P_MAX, uav_old, P_UAV, P_0, U_TIP, P_1, C_0, V_0, G_0, channel_target_diff, SENSING_TH, RCS, distance_target, X_DL_old, X_UL_old, scaling)
     
     N = size(channel_user_DL, 4);
     num_user = size(channel_user_DL, 3);
@@ -66,11 +66,17 @@ function R = get_transmit_precoder_sensing(channel_user_DL, channel_user_UL, cha
     
                     subject to
                         
-                        delta_DL_tmp >= RATE_TH_DL * (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power);
-                        delta_UL_tmp >= RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power);
+                        10^(-10) * scaling * (delta_DL_tmp) >= 10^(-10) * scaling * (RATE_TH_DL * (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power));
+                        10^(-10) * scaling * (delta_UL_tmp) >= 10^(-10) * scaling * (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
 
-                        delta_DL_tmp >= (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power)^2 / (2 * theta_DL) + theta_DL * X_DL(k,n)^2 / 2;
-                        delta_UL_tmp >= (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power)^2 / (2 * theta_UL) + theta_UL * X_UL(k,n)^2 / 2;
+                        10^(-10) * scaling * (delta_DL_tmp) >= 10^(-10) * scaling * ((interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power)^2 / (2 * theta_DL) + theta_DL * X_DL(k,n)^2 / 2);
+                        10^(-10) * scaling * (delta_UL_tmp) >= 10^(-10) * scaling * ((interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power)^2 / (2 * theta_UL) + theta_UL * X_UL(k,n)^2 / 2);
+
+                        % (delta_DL_tmp) >= (RATE_TH_DL * (interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power));
+                        % (delta_UL_tmp) >= (RATE_TH_UL * (interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power));
+                        % 
+                        % (delta_DL_tmp) >= ((interference_user_tmp_DL + interference_target_tmp_DL_new + noise_power)^2 / (2 * theta_DL) + theta_DL * X_DL(k,n)^2 / 2);
+                        % (delta_UL_tmp) >= ((interference_user_tmp_UL + interference_target_tmp_UL_new + noise_power)^2 / (2 * theta_UL) + theta_UL * X_UL(k,n)^2 / 2);
                 end
 
                 for j = 1 : num_target
