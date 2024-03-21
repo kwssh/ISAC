@@ -6,7 +6,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.SCALING_TMP = 1;
 
     PARAM.NUM_USER = 1;
-    PARAM.NUM_TARGET = 1;
+    PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 10^6;
 
@@ -26,8 +26,8 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.P_MAX = 0.5;
     PARAM.CHANNEL_GAIN = 10^(-6);
 
-    PARAM.T = 11;
-    PARAM.N = 11;
+    PARAM.T = 3;
+    PARAM.N = 3;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
     PARAM.V_MAX = 1000;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
