@@ -71,7 +71,7 @@ function uav = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, N, num_user, num_targ
                 gamma_tilda(k,n) = gamma_low(k,n) - (log_sum_exp([log(F(k,n)) + eta(k,n) log(noise_power)])) / log(2);
 
                 subject to
-                    1 / exp(eta(k,n)) <= norm([uav_t(n,1) - user(k,1), uav_t(n,2) - user(k,2)])^2 + sum(2 * (uav_t(n,:) - user(k,:)) .* (uav(n,:) - uav_t(n,:)));
+                    PARAM.SCALING * (1 / exp(eta(k,n))) <= PARAM.SCALING * (norm([uav_t(n,1) - user(k,1), uav_t(n,2) - user(k,2)])^2 + sum(2 * (uav_t(n,:) - user(k,:)) .* (uav(n,:) - uav_t(n,:))));
             end
 
             for j = 1 : num_target

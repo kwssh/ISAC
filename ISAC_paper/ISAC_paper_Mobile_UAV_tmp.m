@@ -5,12 +5,12 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.SCALING = 1000;
     PARAM.SCALING_TMP = 1;
 
-    PARAM.NUM_USER = 1;
+    PARAM.NUM_USER = 2;
     PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 10^6;
 
-    PARAM.USER = [370 400];
+    PARAM.USER = [370 400; 630 400];
     PARAM.UAV_START = [450 525];
     PARAM.UAV_END = [550 525];
     PARAM.UAV_Z = 100;
@@ -198,7 +198,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     
         
             uav_t = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
-
+            % uav_t = [450 525; 500 400; 550 525];
               %-----------------------------display part-----------------------------------------------------------------------------------------------------------------------------%
      
             get_display(uav_t, 'UAV position      : ');
