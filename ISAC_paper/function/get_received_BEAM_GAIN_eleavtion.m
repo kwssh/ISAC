@@ -8,8 +8,8 @@ function get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, 
 
     precoder_total = precoder_total + R;
 
-    axis_min = -150;
-    axis_max = 250;
+    axis_min = -350;
+    axis_max = 700;
 
     x = linspace(axis_min, axis_max, axis_max - axis_min + 1);
     y = linspace(axis_min, axis_max, axis_max - axis_min + 1);
@@ -37,7 +37,7 @@ function get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, 
     plot(target(:, 1), target(:, 2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
     
     colorbar;
-    caxis([0, 6]);
+    % caxis([0, 6]);
     
     xlabel('X (m)');
     ylabel('Y (m)');

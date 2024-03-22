@@ -11,9 +11,9 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 100;
 
-    PARAM.USER = [0 0; -100 -70];
-    PARAM.UAV_T = [-100 0];
-    PARAM.UAV_Z = 100;
+    PARAM.USER = [370 400; 630 400];
+    PARAM.UAV_T = [370 400];
+    PARAM.UAV_Z = 10;
     PARAM.TARGET = get_target(PARAM.NUM_TARGET);
     PARAM.TARGET = [500 525];
 
@@ -178,5 +178,5 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
     end
 
     % get_received_BEAM_GAIN(W_opt, R_opt, PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.SENSING_TH_SCALING, PARAM.SCALING, distance_user_t, distance_target_t, PARAM.UAV_Z);
-    get_received_BEAM_GAIN_eleavtion(W_opt, R_opt, PARAM.USER, PARAM.UAV_T, PARAM.TARGET, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.UAV_Z);
+    % get_received_BEAM_GAIN_eleavtion(W_opt, R_opt, PARAM.USER, PARAM.UAV_T, PARAM.TARGET, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.UAV_Z);
 end

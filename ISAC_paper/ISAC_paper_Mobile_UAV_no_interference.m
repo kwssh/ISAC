@@ -13,7 +13,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.USER = [370 400; 630 400];
     PARAM.UAV_START = [450 525];
     PARAM.UAV_END = [550 525];
-    PARAM.UAV_Z = 10;
+    PARAM.UAV_Z = 100;
     % PARAM.TARGET = get_target(PARAM.NUM_TARGET);
     PARAM.TARGET = [520 596];
     
@@ -79,7 +79,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
             end
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
-            [user_rate_current, ~] = get_test_trajectory(W_t, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
+            [user_rate_current, ~] = get_test_trajectory_no_interference(W_t, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
             user_rate_episode(:,:,1) = user_rate_current;
         end
         
@@ -94,19 +94,12 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
         
             for k = 1 : PARAM.NUM_USER
     
-                for i = 1 : PARAM.NUM_USER
-                    if i == k
-                        continue;
-                    end
-    
-                    alpha_tmp(k, n) = alpha_tmp(k, n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W_t(:,:,i,n)));
-                end
-    
-                alpha(k,n) = alpha_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + PARAM.NOISE_POWER_SCALING;
+              
+                alpha(k,n) = real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + PARAM.NOISE_POWER_SCALING;
                 alpha(k,n) = log(alpha(k,n)) / log(2);
         
                 B(:,:,k,n) = channel_t(:,k,n) * channel_her_t(k,:,n);
-                B(:,:,k,n) = B(:,:,k,n) / (alpha_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + PARAM.NOISE_POWER_SCALING);
+                B(:,:,k,n) = B(:,:,k,n) / (real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R_t(:,:,n))) + PARAM.NOISE_POWER_SCALING);
                 B(:,:,k,n) = B(:,:,k,n) / log(2);
     
             end
@@ -139,22 +132,10 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
 
                 for k = 1 : PARAM.NUM_USER
     
-                    for i = 1:PARAM.NUM_USER
-                        objective_1_tmp(k,n) = objective_1_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W(:,:,i,n)));
-    
-                        if i == k
-                            continue;
-                        end
-    
-                        objective_2_tmp(k,n) = objective_2_tmp(k,n) + real(trace(B(:,:,k,n) * (W(:,:,i,n) - W_t(:,:,i,n))));
-                    end
-    
-                    tmp(k,n) = objective_1_tmp(k,n) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R(:,:,n))) + PARAM.NOISE_POWER_SCALING;
-                    tmp_tmp(k,n) = -rel_entr(1, tmp(k,n));
-                    objective_1(k,n) = tmp_tmp(k,n) / log(2);
+                    objective_1(k,n) = real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W(:,:,k,n))) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R(:,:,n))) + PARAM.NOISE_POWER_SCALING;
         
-                    objective_2(k,n) = alpha(k,n) + objective_2_tmp(k,n) + real(trace(B(:,:,k,n) * (R(:,:,n) - R_t(:,:,n))));
-        
+                    objective_2(k,n) = alpha(k,n) + real(trace(B(:,:,k,n) * (R(:,:,n) - R_t(:,:,n))));
+                    
                     sum_rate(k,n) = objective_1(k,n) - objective_2(k,n);
             
                     sensing_constraint_tmp = sensing_constraint_tmp + W(:,:,k,n);
@@ -189,7 +170,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
         
         [W_opt, R_opt] = get_precoder_opt_trajectory(channel_t, channel_her_t, W, R, PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.N);
       
-        [user_rate_prev_UAV, error_prev_UAV] = get_test_trajectory(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
+        [user_rate_prev_UAV, error_prev_UAV] = get_test_trajectory_no_interference(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
         
         %-----------------------------optimize UAV-----------------------------------------------------------------------------------------------------------------------------%
        
@@ -197,7 +178,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
         
-            uav_t = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
+            uav_t = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
             % uav_t = [450 525; 500 400; 550 525];
               %-----------------------------display part-----------------------------------------------------------------------------------------------------------------------------%
      
@@ -223,7 +204,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
             end
         end
 
-        [user_rate_current, ~] = get_test_trajectory(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
+        [user_rate_current, ~] = get_test_trajectory_no_interference(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
        
         user_rate_episode(:,:,episode) = user_rate_current;
 

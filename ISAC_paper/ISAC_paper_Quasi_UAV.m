@@ -11,9 +11,9 @@ function sum_rate_final = ISAC_paper_Quasi_UAV()
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 100;
 
-    PARAM.USER = [370 400];
-    uav_t = [450 525];
-    PARAM.UAV_Z = 100;
+    PARAM.USER = [370 400; 630 400];
+    uav_t = [370 400];
+    PARAM.UAV_Z = 10;
     PARAM.TARGET = [randi([450, 550], PARAM.NUM_TARGET, 1) randi([590, 610], PARAM.NUM_TARGET, 1)];
 
     PARAM.NOISE_POWER = 10^-14;

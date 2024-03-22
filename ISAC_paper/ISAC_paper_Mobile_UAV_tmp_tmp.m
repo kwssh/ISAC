@@ -13,7 +13,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.USER = [370 400; 630 400];
     PARAM.UAV_START = [450 525];
     PARAM.UAV_END = [550 525];
-    PARAM.UAV_Z = 10;
+    PARAM.UAV_Z = 100;
     % PARAM.TARGET = get_target(PARAM.NUM_TARGET);
     PARAM.TARGET = [520 596];
     
@@ -29,7 +29,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.T = 3;
     PARAM.N = 3;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 10000;
+    PARAM.V_MAX = 1000;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
@@ -197,8 +197,8 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
         
-            uav_t = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
-            % uav_t = [450 525; 500 400; 550 525];
+            % uav_t = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
+            uav_t = [450 525; 370 400; 550 525];
               %-----------------------------display part-----------------------------------------------------------------------------------------------------------------------------%
      
             get_display(uav_t, 'UAV position      : ');
