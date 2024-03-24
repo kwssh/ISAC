@@ -132,12 +132,16 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
 
                 for k = 1 : PARAM.NUM_USER
     
-                    objective_1(k,n) = real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W(:,:,k,n))) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R(:,:,n))) + PARAM.NOISE_POWER_SCALING;
-        
-                    objective_2(k,n) = alpha(k,n) + real(trace(B(:,:,k,n) * (R(:,:,n) - R_t(:,:,n))));
-                    
-                    sum_rate(k,n) = objective_1(k,n) - objective_2(k,n);
-            
+                    % objective_1(k,n) = real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W(:,:,k,n))) + real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * R(:,:,n))) + PARAM.NOISE_POWER_SCALING;
+                    % objective_1(k,n) = -rel_entr(1, objective_1(k,n)) / log(2);
+                    % 
+                    % objective_2(k,n) = alpha(k,n) + real(trace(B(:,:,k,n) * (R(:,:,n) - R_t(:,:,n))));
+                    % 
+                    % sum_rate(k,n) = objective_1(k,n) - objective_2(k,n);
+
+                    tmp = 1 + (real(trace(channel_t(:,k,n) * channel_her_t(k,:,n) * W(:,:,k,n))) / PARAM.NOISE_POWER_SCALING);
+                    sum_rate(k,n) = -rel_entr(1, tmp) / log(2);
+
                     sensing_constraint_tmp = sensing_constraint_tmp + W(:,:,k,n);
                     power_constraint_tmp = power_constraint_tmp + real(trace(W(:,:,k,n)));
                 end
@@ -178,8 +182,8 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
             %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
         
-            uav_t = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
-            % uav_t = [450 525; 500 400; 550 525];
+            % uav_t = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
+            uav_t = [450 525; 500 400; 550 525];
               %-----------------------------display part-----------------------------------------------------------------------------------------------------------------------------%
      
             get_display(uav_t, 'UAV position      : ');

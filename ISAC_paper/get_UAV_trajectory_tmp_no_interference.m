@@ -59,7 +59,7 @@ function uav = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, N, nu
     
                 end
     
-                % F(k,n) = F(k,n) + abs(real(trace(channel(:, k, n) * channel_her(k, :, n) * R_opt(:,:,n))));
+                F(k,n) = F(k,n) + real(trace(channel(:, k, n) * channel_her(k, :, n) * R_opt(:,:,n)));
     
                 first_val = log2((E(k,n) + F(k,n)) / distance_user(k,n) + noise_power);
                 first_dev_tmp1 = -log2(exp(1)) * (E(k,n) + F(k,n)) / distance_user(k,n)^2;
@@ -68,8 +68,10 @@ function uav = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, N, nu
 
                 gamma_low(k,n) = first_val + first_dev * (distance_user_uav(k,n) - distance_user(k,n));
 
-                gamma_tilda(k,n) = gamma_low(k,n) - log2(noise_power);
+                % gamma_tilda(k,n) = gamma_low(k,n) - (log_sum_exp([log(F(k,n)) + eta(k,n) log(noise_power)])) / log(2);
 
+                gamma_tilda(k,n) = gamma_low(k,n) - log2(noise_power);
+                
                 subject to
                     PARAM.SCALING * (1 / exp(eta(k,n))) <= PARAM.SCALING * (norm([uav_t(n,1) - user(k,1), uav_t(n,2) - user(k,2)])^2 + sum(2 * (uav_t(n,:) - user(k,:)) .* (uav(n,:) - uav_t(n,:))));
             end
