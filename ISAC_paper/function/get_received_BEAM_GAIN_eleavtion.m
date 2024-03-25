@@ -8,21 +8,26 @@ function get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, 
 
     precoder_total = precoder_total + R;
 
-    axis_min = -350;
-    axis_max = 700;
+    x_axis_min = -1000;
+    x_axis_max = 150;
 
-    x = linspace(axis_min, axis_max, axis_max - axis_min + 1);
-    y = linspace(axis_min, axis_max, axis_max - axis_min + 1);
+    y_axis_min = 0;
+    y_axis_max = 150;
+
+    x = linspace(x_axis_min, x_axis_max, x_axis_max - x_axis_min + 1);
+    y = linspace(y_axis_min, y_axis_max, y_axis_max - y_axis_min + 1);
 
     beam_gain = zeros(size(x,2), size(y,2));
 
     for i = 1 : size(x,2)
         for j = 1 : size(y,2)
             
-            steering = get_steering(get_distance(uav, [x(i) y(j)], uav_z), 1, uav_z, num_antenna);
+            distance_tmp = get_distance(uav, [x(i) y(j)], uav_z);
+
+            steering = get_steering(distance_tmp, 1, uav_z, num_antenna);
             steering_her = transpose(conj(steering));
 
-            beam_gain(i,j) = real(steering_her * precoder_total * steering);
+            beam_gain(i,j) = real(steering_her * precoder_total * steering) / distance_tmp^2;
         end
     end
 

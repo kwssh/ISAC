@@ -2,6 +2,8 @@ function [uav_init, W_opt, R_opt] = get_init_trajectory_SF(target, num_antenna, 
 
     uav_init_tmp = linspace(start_x, end_x, N);
     uav_init = [uav_init_tmp' ones(N, 1) * uav_y];
+    % uav_init = [-100 100; 0 0; 100 100];
+
     R_opt = zeros(num_antenna, num_antenna, N);
 
     distance_target = zeros(num_target, N);

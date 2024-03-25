@@ -45,7 +45,8 @@ function uav = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, N, nu
     
             for k = 1 : num_user
 
-                distance_user_uav(k,n) = get_distance(uav(n, :), user, uav_z);
+                distance_user_uav(k,n) = get_distance(uav(n, :), user(k,:), uav_z);
+                distance_user_uav(k,n) = pow_pos(distance_user_uav(k,n), 2);
     
                 E(k,n) = real(trace(channel(:, k, n) * channel_her(k, :, n) * W_opt(:,:,k,n)));
     
@@ -77,9 +78,9 @@ function uav = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, N, nu
             end
 
             for j = 1 : num_target
-                distance_target_uav(j,n) = get_distance(uav(n, :), target, uav_z);
+                distance_target_uav(j,n) = get_distance(uav(n, :), target(j, :), uav_z);
                 sensing_power(j, n) = real(steering_target_her(j,:,n) * (W_sum + R_opt(:,:,n)) * steering_target(:,j,n));
-                sensing_power(j, n) >= distance_target_uav(j,n) * sensing_th;
+                sensing_power(j, n) >= pow_pos(distance_target_uav(j,n),2) * PARAM.SENSING_TH_SCALING * 100;
             end
 
             -1000 <= uav(n,1) <= 1000;

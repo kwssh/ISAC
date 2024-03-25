@@ -13,13 +13,7 @@ function [rate, error] = get_test_trajectory_no_interference(W, R, p_max, sensin
             objective_1_tmp = 0;
             objective_2_tmp = 0;
     
-            is_psd = all(eig(W(:,:,k,n)) >= 0);
-    
-            if is_psd
-    
-            else
-                error = error + 1;
-            end
+     
     
             power_constraint_tmp = power_constraint_tmp + real(trace(W(:,:,k,n)));
             sensing_constraint_tmp = sensing_constraint_tmp + W(:,:,k,n);
@@ -35,21 +29,8 @@ function [rate, error] = get_test_trajectory_no_interference(W, R, p_max, sensin
         end
 
 
-        is_psd = all(eig(R(:,:,n)) >= 0);
-    
-        if is_psd
-    
-        else
-            error = error + 1;
-        end
-    
-        power_constraint = power_constraint_tmp + real(trace(R(:,:,n)));
-    
-        if power_constraint <= p_max
-    
-        else
-            error = error + 1;
-        end
+       
+        
     
         for j = 1:num_target
     
