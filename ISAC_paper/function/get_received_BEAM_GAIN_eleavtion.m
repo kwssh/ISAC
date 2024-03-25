@@ -1,4 +1,4 @@
-function fig = get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, num_user, uav_z)
+function fig = get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_antenna, num_user, uav_z, num_target)
     
     min_x = min([min(uav(:,1)) min(user(:,1)) min(target(:,1))]);
     max_x = max([max(uav(:,1)) max(user(:,1)) max(target(:,1))]);
@@ -45,7 +45,10 @@ function fig = get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_ant
     plot(q(:, 1), q(:, 2), "+", 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'black');
     plot(uav(:, 1), uav(:, 2), "+", 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'green');
     plot(user(:, 1), user(:, 2), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
-    plot(target(:, 1), target(:, 2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+    
+    if num_target
+        plot(target(:, 1), target(:, 2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+    end
     
     colorbar;
     % caxis([0, 6]);

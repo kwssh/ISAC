@@ -17,7 +17,10 @@ function fig = plot_UAV_trajectory(uav_t, PARAM)
     end
     
     plot(PARAM.USER(:,1), PARAM.USER(:,2), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
-    plot(PARAM.TARGET(:,1), PARAM.TARGET(:,2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+
+    if PARAM.NUM_TARGET
+        plot(PARAM.TARGET(:,1), PARAM.TARGET(:,2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+    end
     
     legend('uav trajectory', 'user position', 'target position');
     
