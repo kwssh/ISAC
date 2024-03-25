@@ -235,6 +235,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
         end
 
         file_txt = fopen(strcat(save_path, '\result.txt'), 'a');
+        
         dlmwrite(strcat(save_path, '\result.txt'), user_rate_current, 'delimiter', '\t', 'precision', '%f');
         
         for i = 1 : episode
