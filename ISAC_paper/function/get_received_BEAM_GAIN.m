@@ -1,4 +1,4 @@
-function get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling, distance_user, distance_target, uav_z)
+function fig = get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling, distance_user, distance_target, uav_z)
 
     precoder_total = zeros(num_antenna, num_antenna);
     [num_target, ~] = size(distance_target);
@@ -51,6 +51,7 @@ function get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling
         distance = uav_z / (cos(deg2rad(degree(idx))));
 
         beam_gain(idx) = (steering_distance_her * precoder_total * steering_distance) / distance^2;
+        % beam_gain(idx) = (steering_distance_her * precoder_total * steering_distance);
     end
 
     plot(degree, beam_gain);
@@ -60,6 +61,7 @@ function get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling
     % plot(degree_user, beam_gain_user, 'go', 'MarkerSize', 10, 'LineWidth', 2);
     % 
     % plot(degree_target, beam_gain_target, 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+    xlim([0 361]);
     xlabel('Degree');
     ylabel('Beam Gain');
     title('Beam Gain vs. Degree');
@@ -67,8 +69,11 @@ function get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling
 
     hold on;
     plot(degree, sensing, ':', 'LineWidth', 2);
-    plot(degree_user, zeros(size(distance_user,1),1), 'go', 'MarkerSize', 10, 'LineWidth', 2);
-    plot(degree_target, zeros(size(distance_target,1),1), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+    plot(degree_user, zeros(size(distance_user,1),1), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
+    plot(degree_target, zeros(size(distance_target,1),1), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+    
+    legend('', '', 'User position', 'Target position');
+    fig = gcf;
 
     % polarplot(deg2rad(degree), beam_gain);
     % title('Beam Gain vs. Angle');

@@ -1,6 +1,9 @@
 function sum_rate_final = ISAC_paper_Mobile_UAV()
     clear
     format long
+    
+    [save_idx, folder_name] = init_ISAC();
+    
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
     PARAM.SCALING_TMP = 1;
@@ -13,9 +16,9 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.USER = [-1000 0];
     PARAM.UAV_START = [-100 100];
     PARAM.UAV_END = [100 100];
-    PARAM.UAV_Z = 1;
+    PARAM.UAV_Z = 50;
     % PARAM.TARGET = get_target(PARAM.NUM_TARGET);
-    PARAM.TARGET = [0 0];
+    PARAM.TARGET = [0 70];
     
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
@@ -223,6 +226,37 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     end
     %-----------------------------Epsiode End-----------------------------------------------------------------------------------------------------------------------------%
     
-    % get_received_BEAM_GAIN(W_opt(:,:,:,n), R_opt(:,:,n), PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.SENSING_TH_SCALING, PARAM.SCALING, distance_user_t(:, n), distance_target_t(:, n), PARAM.UAV_Z);
-    % get_received_BEAM_GAIN_eleavtion(W_opt(:,:,:,n), R_opt(:,:,n), PARAM.USER, uav_t(n,:), PARAM.TARGET, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.UAV_Z);
+    if save_idx == 1
+
+        save_path = strcat(pwd, '\figure\', folder_name);
+
+        if ~exist(save_path, 'dir')
+            mkdir(save_path);
+        end
+
+        file_txt = fopen(strcat(save_path, '\result.txt'), 'a');
+        dlmwrite(strcat(save_path, '\result.txt'), user_rate_current, 'delimiter', '\t', 'precision', '%f');
+        
+        for i = 1 : episode
+        
+            fprintf(file_txt, '%f ', sum(sum(user_rate_episode(:,:,i))));
+            fprintf(file_txt, '%d\n', sensing_error_episode(episode));
+        end
+
+        fclose(file_txt);
+
+        fig3 = plot_UAV_trajectory(uav_t, PARAM);
+        saveas(fig3, strcat(save_path, '\UAV_trajectory_', num2str(n)));
+        close(fig3);
+
+        for n = 1 : PARAM.N
+            fig1 = get_received_BEAM_GAIN(W_opt(:,:,:,n), R_opt(:,:,n), PARAM.NUM_USER, PARAM.NUM_ANTENNA, PARAM.SENSING_TH_SCALING, PARAM.SCALING, distance_user_t(:, n), distance_target_t(:, n), PARAM.UAV_Z);
+            saveas(fig1, strcat(save_path, '\Beampattern_gain_degree_', num2str(n)));
+            close(fig1);
+            
+            fig2 = get_received_BEAM_GAIN_eleavtion(W_opt(:,:,:,n), R_opt(:,:,n), PARAM.USER, uav_t(n,:), PARAM.TARGET, PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.UAV_Z);
+            saveas(fig2, strcat(save_path, '\Beampattern_gain_distance_', num2str(n)));
+            close(fig2);
+        end
+    end
 end
