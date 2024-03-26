@@ -32,7 +32,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.T = 5;
     PARAM.N = 5;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 10000;
+    PARAM.V_MAX = 100;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
@@ -235,13 +235,18 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
         end
 
         file_txt = fopen(strcat(save_path, '\result.txt'), 'a');
-        
-        dlmwrite(strcat(save_path, '\result.txt'), user_rate_current, 'delimiter', '\t', 'precision', '%f');
+
+        fprintf(file_txt, 'user rate : ');
+        fclose(file_txt);
+
+        writematrix(user_rate_current, fullfile(save_path, 'result.txt'), 'Delimiter', '\t', 'WriteMode', 'append');
+
+        file_txt = fopen(strcat(save_path, '\result.txt'), 'a');
         
         for i = 1 : episode
         
-            fprintf(file_txt, '%f ', sum(sum(user_rate_episode(:,:,i))));
-            fprintf(file_txt, '%d\n', sensing_error_episode(episode));
+            fprintf(file_txt, 'sum rate : %f, ', sum(sum(user_rate_episode(:,:,i))));
+            fprintf(file_txt, 'number of sensing error : %d\n', sensing_error_episode(episode));
         end
 
         fclose(file_txt);

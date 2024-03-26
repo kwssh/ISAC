@@ -6,10 +6,10 @@ function fig = plot_UAV_trajectory(uav_t, PARAM)
     x = uav_t(:, 1);
     y = uav_t(:, 2);
 
-    plot(x, y, '-^','LineWidth', 2, 'Color', 'black', 'MarkerSize', 12);
+    plot(x, y, '-^','LineWidth', 3, 'Color', [0.8 0.8 0.8], 'MarkerSize', 7);
     grid on;
-    xlabel('x-axis');
-    ylabel('y-axis');
+    xlabel('X (m)');
+    ylabel('Y (m)');
     title('UAV trajectory');
 
     for i = 1:length(x)
@@ -20,9 +20,12 @@ function fig = plot_UAV_trajectory(uav_t, PARAM)
 
     if PARAM.NUM_TARGET
         plot(PARAM.TARGET(:,1), PARAM.TARGET(:,2), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+        legend('uav trajectory', 'user position', 'target position');
+    else
+        legend('uav trajectory', 'user position');
     end
     
-    legend('uav trajectory', 'user position', 'target position');
+    
     
     fig = gcf;
 end

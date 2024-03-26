@@ -62,17 +62,25 @@ function fig = get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, s
     % 
     % plot(degree_target, beam_gain_target, 'rx', 'MarkerSize', 10, 'LineWidth', 2);
     xlim([0 361]);
-    xlabel('Degree');
+    ylim([0 max(real(beam_gain)) + sensing_th])
+    xlabel('Elevation');
     ylabel('Beam Gain');
-    title('Beam Gain vs. Degree');
+    title('Beam Gain vs. Elevation');
     grid on;
 
     hold on;
-    plot(degree, sensing, ':', 'LineWidth', 2);
-    plot(degree_user, zeros(size(distance_user,1),1), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
-    plot(degree_target, zeros(size(distance_target,1),1), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+
+    if num_target
+        plot(degree, sensing, ':', 'LineWidth', 2);
+        plot(degree_user, zeros(size(distance_user,1),1), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
+        plot(degree_target, zeros(size(distance_target,1),1), 'o', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'magenta');
+        legend('', 'Sensing threshold', 'User position', 'Target position');
+    else
+        plot(degree_user, zeros(size(distance_user,1),1), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
+        legend('','User position');
+    end
     
-    legend('', '', 'User position', 'Target position');
+   
     fig = gcf;
 
     % polarplot(deg2rad(degree), beam_gain);

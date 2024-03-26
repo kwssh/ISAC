@@ -41,8 +41,8 @@ function fig = get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_ant
     imagesc(x, y, beam_gain');
     set(gca, 'YDir','normal');
     hold on;
-    q = [450 525];
-    plot(q(:, 1), q(:, 2), "+", 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'black');
+    % q = [450 525];
+    % plot(q(:, 1), q(:, 2), "+", 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'black');
     plot(uav(:, 1), uav(:, 2), "+", 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'green');
     plot(user(:, 1), user(:, 2), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
     
@@ -56,7 +56,7 @@ function fig = get_received_BEAM_GAIN_eleavtion(W, R, user, uav, target, num_ant
     xlabel('X (m)');
     ylabel('Y (m)');
 
-    legend('UAV position(initial point)', 'UAV position(final point)', 'User position', 'Target position');
+    legend('UAV position', 'User position', 'Target position');
     % legend('UAV position(final point)', 'User position', 'Target position');
 
     fig = gcf;
