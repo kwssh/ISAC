@@ -13,13 +13,8 @@ function [rate, error] = get_test_trajectory(W, R, p_max, sensing_th, num_target
             objective_1_tmp = 0;
             objective_2_tmp = 0;
     
-            is_psd = all(eig(W(:,:,k,n)) >= 0);
     
-            if is_psd
-    
-            else
-                error = error + 1;
-            end
+            
     
             power_constraint_tmp = power_constraint_tmp + real(trace(W(:,:,k,n)));
             sensing_constraint_tmp = sensing_constraint_tmp + W(:,:,k,n);
@@ -45,22 +40,7 @@ function [rate, error] = get_test_trajectory(W, R, p_max, sensing_th, num_target
         end
 
 
-        is_psd = all(eig(R(:,:,n)) >= 0);
-    
-        if is_psd
-    
-        else
-            error = error + 1;
-        end
-    
-        power_constraint = power_constraint_tmp + real(trace(R(:,:,n)));
-    
-        if power_constraint <= p_max
-    
-        else
-            error = error + 1;
-        end
-    
+  
         for j = 1:num_target
     
             sensing_constraint = real(steering_target_her(j,:,n) * (sensing_constraint_tmp + R(:,:,n)) * steering_target(:,j,n));

@@ -8,22 +8,22 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.SCALING = 1000;
     PARAM.SCALING_TMP = 1;
 
-    PARAM.NUM_USER = 1;
-    PARAM.NUM_TARGET = 1;
+    PARAM.NUM_USER = 4;
+    PARAM.NUM_TARGET = 0;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 10^6;
 
-    PARAM.USER = [300 300];
+    PARAM.USER = [-300 -300; -70 -400; 70 -400; 300 -300];
     PARAM.UAV_START = [-10 0];
     PARAM.UAV_END = [10 0];
     PARAM.UAV_Z = 30;
     % PARAM.TARGET = get_target(PARAM.NUM_TARGET);
-    PARAM.TARGET = [100 100];
+    PARAM.TARGET = [-100 100; 100 100];
     
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH = 10^(-3.7);
+    PARAM.SENSING_TH = 10^(-4.6);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.5;
@@ -32,7 +32,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.T = 5;
     PARAM.N = 5;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 100;
+    PARAM.V_MAX = 10000;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
@@ -167,7 +167,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
                     power_constraint <= PARAM.P_MAX;
     
                     for j = 1 : PARAM.NUM_TARGET
-                        sensing_constraint(j,n) >= PARAM.SENSING_TH_SCALING * distance_target_t(j,n)^2;
+                        1000 * (sensing_constraint(j,n)) >= 1000 * (PARAM.SENSING_TH_SCALING * distance_target_t(j,n)^2);
                     end
             end
 

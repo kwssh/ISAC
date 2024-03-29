@@ -1,0 +1,15 @@
+user rate : 
+10.0634695248273	11.1020665333548	11.1022964485052	11.1025308192922	10.1591377392483
+11.1021118897721	17.5885356444208	17.5885217489865	17.588535638495	11.1021118858649
+10.1591377346129	11.1025307976959	11.1022964628397	11.1020665062211	10.0634695239898
+sum rate : 160.768937, number of sensing error : 0
+sum rate : 147.315981, number of sensing error : 0
+sum rate : 165.006713, number of sensing error : 0
+sum rate : 167.375026, number of sensing error : 0
+sum rate : 173.891995, number of sensing error : 0
+sum rate : 180.367567, number of sensing error : 0
+sum rate : 181.638291, number of sensing error : 0
+sum rate : 182.470982, number of sensing error : 0
+sum rate : 181.375300, number of sensing error : 0
+sum rate : 182.031191, number of sensing error : 0
+sum rate : 182.028819, number of sensing error : 0

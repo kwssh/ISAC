@@ -80,7 +80,7 @@ function uav = get_UAV_trajectory_tmp_no_interference(uav_t, W_opt, R_opt, N, nu
             for j = 1 : num_target
                 distance_target_uav(j,n) = get_distance(uav(n, :), target(j, :), uav_z);
                 sensing_power(j, n) = real(steering_target_her(j,:,n) * (W_sum + R_opt(:,:,n)) * steering_target(:,j,n));
-                sensing_power(j, n) >= pow_pos(distance_target_uav(j,n),2) * PARAM.SENSING_TH_SCALING;
+                1000 * (sensing_power(j, n)) >= 1000 * (pow_pos(distance_target_uav(j,n),2) * PARAM.SENSING_TH_SCALING);
             end
 
             -1000 <= uav(n,1) <= 1000;
