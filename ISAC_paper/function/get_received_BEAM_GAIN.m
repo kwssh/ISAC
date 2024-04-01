@@ -54,7 +54,7 @@ function fig = get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, s
         % beam_gain(idx) = (steering_distance_her * precoder_total * steering_distance);
     end
 
-    plot(degree, beam_gain);
+    plot(degree, beam_gain, 'LineWidth', 2);
 
     % beam_gain_user_tmp = linspace(0, beam_gain_user, 100);
     % plot(ones(size(beam_gain_user_tmp)) * degree_user, beam_gain_user_tmp, '--');

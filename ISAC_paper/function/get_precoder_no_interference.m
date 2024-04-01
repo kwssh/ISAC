@@ -1,4 +1,4 @@
-function [W_opt, R_opt] = get_precoder_no_interference(PARAM, channel_t, channel_her_t)
+function [W_opt, R_opt] = get_precoder_no_interference(PARAM, channel_t, channel_her_t, steering_target_t, steering_target_her_t, distance_target_t)
 
     %-----------------------------precoder CVX start-----------------------------------------------------------------------------------------------------------------------------%
     cvx_begin

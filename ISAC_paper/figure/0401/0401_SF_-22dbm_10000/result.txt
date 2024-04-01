@@ -1,0 +1,19 @@
+user rate : 
+4.5428549810822e-11	2.15170103956552e-11	7.32303107042753e-11	11.6720686834747	11.6476459083324
+1.33443478489426e-10	9.15942877099951e-11	11.821669543987	7.9690920529174e-11	1.03373309912058e-10
+1.03376862625737e-10	7.9690920529174e-11	1.30917499063798e-11	9.15942877099951e-11	1.33441702132586e-10
+11.6476459082924	11.6720686834854	7.32303107042753e-11	2.15170103956552e-11	4.54267734539826e-11
+sum rate : 2.724109, number of sensing error : 0
+sum rate : 7.511896, number of sensing error : 0
+sum rate : 7.799602, number of sensing error : 0
+sum rate : 8.915351, number of sensing error : 0
+sum rate : 9.795462, number of sensing error : 0
+sum rate : 10.158152, number of sensing error : 0
+sum rate : 10.523359, number of sensing error : 0
+sum rate : 10.888476, number of sensing error : 0
+sum rate : 11.242433, number of sensing error : 0
+sum rate : 11.527762, number of sensing error : 0
+sum rate : 11.610460, number of sensing error : 0
+sum rate : 11.680602, number of sensing error : 0
+sum rate : 11.692220, number of sensing error : 0
+sum rate : 11.692226, number of sensing error : 0

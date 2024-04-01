@@ -1,0 +1,4 @@
+user rate : 
+11.5278189717625	11.5772344831033	11.6239938035754	11.6677727890115	11.7083905962647
+sum rate : 58.105211, number of sensing error : 0
+sum rate : 58.105211, number of sensing error : 0

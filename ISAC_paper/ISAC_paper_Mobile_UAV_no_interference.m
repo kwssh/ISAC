@@ -7,21 +7,22 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_no_interference()
     PARAM.SCALING = 1000;
     PARAM.SCALING_TMP = 1;
 
-    PARAM.NUM_USER = 4;
-    PARAM.NUM_TARGET = 0;
+    PARAM.NUM_USER = 1;
+    PARAM.NUM_TARGET = 1;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 10^6;
 
-    PARAM.USER = [-300 -300; -70 -400; 70 -400; 300 -300];
+    PARAM.USER = [300 300];
     PARAM.UAV_START = [-10 0];
     PARAM.UAV_END = [10 0];
     PARAM.UAV_Z = 30;
-    PARAM.TARGET = [-100 100; 100 100];
+    PARAM.TARGET = [-100 100];
     
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH = 10^(-4.6);
+    PARAM.SENSING_TH_db = -13;
+    PARAM.SENSING_TH = 10^(-0.1 * PARAM.SENSING_TH_db) * 10^(-3);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.5;
@@ -30,7 +31,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_no_interference()
     PARAM.T = 5;
     PARAM.N = 5;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 10000;
+    PARAM.V_MAX = 100;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
@@ -58,7 +59,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_no_interference()
         user_rate_prev = user_rate_current;
 
         %-----------------------------optimize precoder-----------------------------------------------------------------------------------------------------------------------------%
-        [W_opt, R_opt] = get_precoder_no_interference(PARAM, channel_t, channel_her_t);
+        [W_opt, R_opt] = get_precoder_no_interference(PARAM, channel_t, channel_her_t, steering_target_t, steering_target_her_t, distance_target_t);
         %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
         %-----------------------------optimize UAV-----------------------------------------------------------------------------------------------------------------------------%
@@ -71,7 +72,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV_no_interference()
 
         [user_rate_current, sensing_error] = get_test_trajectory_no_interference(W_opt, R_opt, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t, PARAM.N);
        
-        user_rate_episode(:,:,episode) = user_rate_current;
+        user_rate_episode(:,:,episode) = user_rate_current / PARAM.N;
         sensing_error_episode(episode) = sensing_error;
 
         if abs(sum(sum(user_rate_current)) - sum(sum(user_rate_prev))) < 1e-2

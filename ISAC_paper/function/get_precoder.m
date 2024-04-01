@@ -1,4 +1,4 @@
-function [W_opt, R_opt] = get_precoder(PARAM, channel_t, channel_her_t, W_t, R_t)
+function [W_opt, R_opt] = get_precoder(PARAM, channel_t, channel_her_t, W_t, R_t, steering_target_t, steering_target_her_t, distance_target_t)
 
     alpha = zeros(PARAM.NUM_USER, PARAM.N);
     alpha_tmp = zeros(PARAM.NUM_USER, PARAM.N);
