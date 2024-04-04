@@ -42,4 +42,4 @@ sum rate : 12.137050, number of sensing error : 3
 sum rate : 12.156899, number of sensing error : 3
 sum rate : 12.153189, number of sensing error : 3
 sum rate : 12.168835, number of sensing error : 3
-sum rate : 12.166845, number of sensing error : 3
+sum rate : 12.87512, number of sensing error : 3
