@@ -6,21 +6,21 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 2;
-    PARAM.NUM_TARGET = 0;
+    PARAM.NUM_USER = 4;
+    PARAM.NUM_TARGET = 2;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 100;
 
-    PARAM.USER = [370 400; 630 400];
-    PARAM.UAV_T = [370 400];
-    PARAM.UAV_Z = 10;
-    PARAM.TARGET = get_target(PARAM.NUM_TARGET);
-    PARAM.TARGET = [500 525];
+    PARAM.USER = [-300 -300; -70 -400; 70 -400; 300 -300];
+    PARAM.UAV_T = [0 0];
+    PARAM.UAV_Z = 30;
+    PARAM.TARGET = [-100 100; 100 100];
 
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH = 10^(-4);
+    PARAM.SENSING_TH_db = -22;
+    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.5;
@@ -59,7 +59,7 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
 
             [W_t, R_t] = get_init(PARAM.NUM_ANTENNA, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.SENSING_TH_SCALING, PARAM.P_MAX, steering_target_t, steering_target_her_t, distance_target_t);
 
-            [user_rate_current, ~, ~] = get_test(W_t, W_t, R_t, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, PARAM.NUM_ANTENNA, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t);
+            [user_rate_current, ~] = get_test(W_t, W_t, R_t, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, PARAM.NUM_ANTENNA, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t);
             user_rate_episode(:,1) = user_rate_current;
 
         end
@@ -165,11 +165,11 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
 
         [W_opt, R_opt] = get_precoder_opt(channel_t, channel_her_t, W, R, PARAM.NUM_USER, PARAM.NUM_ANTENNA);
 
-        [user_rate_current, ~, error] = get_test(W_opt, W_t, R_opt, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, PARAM.NUM_ANTENNA, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t);
+        [user_rate_current, error] = get_test(W_opt, W_t, R_opt, R_t, PARAM.P_MAX, PARAM.SENSING_TH_SCALING, PARAM.NUM_TARGET, PARAM.NUM_ANTENNA, channel_t, channel_her_t, PARAM.NOISE_POWER_SCALING, steering_target_t, steering_target_her_t, distance_target_t);
 
         user_rate_episode(:,episode) = user_rate_current;
 
-        if sum(user_rate_current) - sum(user_rate_prev) < 1e-6
+        if sum(user_rate_current) - sum(user_rate_prev) < 1e-2
             break;
         end
 

@@ -1,4 +1,4 @@
-function fig = get_received_BEAM_GAIN(W, R, num_user, num_antenna, sensing_th, scaling, distance_user, distance_target, uav_z)
+function fig = get_received_BEAM_GAIN_no_distance(W, R, num_user, num_antenna, sensing_th, scaling, distance_user, distance_target, uav_z)
 
     precoder_total = zeros(num_antenna, num_antenna);
     [num_target, ~] = size(distance_target);

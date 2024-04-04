@@ -1,0 +1,37 @@
+user rate : 
+6.83897383169096e-13	3.45146133895469e-11	11.4861676288776	12.6332790708215	11.6393783400996
+2.00373051484348e-12	2.54551935086056e-12	5.00577357342991e-12	2.2891910589351e-11	1.55075952079642e-12
+1.55075952079642e-12	1.72093450601096e-11	13.8835418841375	6.29363228199509e-12	2.00373051484348e-12
+11.6393783400935	12.6765973363181	1.12976294985856e-12	2.39399611245972e-11	6.82121026329696e-13
+sum rate : 3.686149, number of sensing error : 0
+sum rate : 7.304149, number of sensing error : 0
+sum rate : 5.244114, number of sensing error : 0
+sum rate : 8.675462, number of sensing error : 0
+sum rate : 11.117992, number of sensing error : 0
+sum rate : 11.484751, number of sensing error : 0
+sum rate : 12.136587, number of sensing error : 0
+sum rate : 12.440103, number of sensing error : 0
+sum rate : 12.513805, number of sensing error : 0
+sum rate : 12.300772, number of sensing error : 0
+sum rate : 10.719907, number of sensing error : 0
+sum rate : 10.503016, number of sensing error : 0
+sum rate : 11.498583, number of sensing error : 0
+sum rate : 12.383542, number of sensing error : 0
+sum rate : 13.253549, number of sensing error : 0
+sum rate : 13.787608, number of sensing error : 0
+sum rate : 13.935782, number of sensing error : 0
+sum rate : 13.961937, number of sensing error : 0
+sum rate : 14.029756, number of sensing error : 0
+sum rate : 14.128400, number of sensing error : 0
+sum rate : 14.240569, number of sensing error : 0
+sum rate : 14.308513, number of sensing error : 0
+sum rate : 14.362871, number of sensing error : 0
+sum rate : 14.422992, number of sensing error : 0
+sum rate : 14.488103, number of sensing error : 0
+sum rate : 14.557335, number of sensing error : 0
+sum rate : 14.629844, number of sensing error : 0
+sum rate : 14.700968, number of sensing error : 0
+sum rate : 14.763958, number of sensing error : 0
+sum rate : 14.789405, number of sensing error : 0
+sum rate : 14.791669, number of sensing error : 0
+sum rate : 14.792445, number of sensing error : 0

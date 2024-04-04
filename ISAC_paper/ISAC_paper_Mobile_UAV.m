@@ -29,10 +29,10 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.P_MAX = 0.5;
     PARAM.CHANNEL_GAIN = 10^(-6);
 
-    PARAM.T = 5;
-    PARAM.N = 5;
+    PARAM.T = 3;
+    PARAM.N = 3;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 100;
+    PARAM.V_MAX = 150;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
@@ -64,7 +64,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
         %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
         %-----------------------------optimize UAV-----------------------------------------------------------------------------------------------------------------------------%
-        uav_t = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
+        % uav_t = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, PARAM.N, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.NOISE_POWER, PARAM.USER, PARAM.UAV_Z, PARAM.TARGET, PARAM.SENSING_TH, PARAM.V_MAX, PARAM.DELTA_T, PARAM);
         %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
 
         %-----------------------------get channel and steering-----------------------------------------------------------------------------------------------------------------------------%

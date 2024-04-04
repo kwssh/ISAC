@@ -1,0 +1,51 @@
+user rate : 
+1.90247817499767e-12	0.950724604451892	1.27805321881169e-10	12.5979497065515	11.6476485125775
+5.6576965334898e-12	4.99724706060078e-11	12.9529686278193	7.15832726427834e-10	4.37516689544282e-12
+4.37516689544282e-12	2.77882605814739e-10	17.4189115735121	5.77358605369227e-10	5.6576965334898e-12
+11.6476485125699	10.5773209414423	11.1688686111659	3.93995946978976e-12	1.90247817499767e-12
+sum rate : 2.722223, number of sensing error : 1
+sum rate : 7.180611, number of sensing error : 1
+sum rate : 5.109234, number of sensing error : 1
+sum rate : 8.875266, number of sensing error : 1
+sum rate : 9.620745, number of sensing error : 1
+sum rate : 11.863953, number of sensing error : 1
+sum rate : 13.988812, number of sensing error : 1
+sum rate : 14.179970, number of sensing error : 1
+sum rate : 14.215342, number of sensing error : 1
+sum rate : 11.848355, number of sensing error : 1
+sum rate : 14.011614, number of sensing error : 1
+sum rate : 12.862756, number of sensing error : 1
+sum rate : 16.010313, number of sensing error : 1
+sum rate : 13.786689, number of sensing error : 1
+sum rate : 12.032106, number of sensing error : 1
+sum rate : 15.235731, number of sensing error : 1
+sum rate : 12.220242, number of sensing error : 1
+sum rate : 14.042215, number of sensing error : 1
+sum rate : 12.875564, number of sensing error : 1
+sum rate : 13.230023, number of sensing error : 1
+sum rate : 11.539474, number of sensing error : 1
+sum rate : 13.151564, number of sensing error : 1
+sum rate : 12.583527, number of sensing error : 1
+sum rate : 14.638939, number of sensing error : 1
+sum rate : 12.597471, number of sensing error : 1
+sum rate : 15.294266, number of sensing error : 1
+sum rate : 13.357621, number of sensing error : 1
+sum rate : 12.104721, number of sensing error : 1
+sum rate : 14.407271, number of sensing error : 1
+sum rate : 13.720111, number of sensing error : 1
+sum rate : 14.611304, number of sensing error : 1
+sum rate : 16.784365, number of sensing error : 1
+sum rate : 14.458383, number of sensing error : 1
+sum rate : 16.957992, number of sensing error : 1
+sum rate : 15.761990, number of sensing error : 1
+sum rate : 16.090931, number of sensing error : 1
+sum rate : 16.433253, number of sensing error : 1
+sum rate : 16.732355, number of sensing error : 1
+sum rate : 16.134996, number of sensing error : 1
+sum rate : 17.372215, number of sensing error : 1
+sum rate : 17.648279, number of sensing error : 1
+sum rate : 17.751343, number of sensing error : 1
+sum rate : 17.781295, number of sensing error : 1
+sum rate : 17.789920, number of sensing error : 1
+sum rate : 17.792408, number of sensing error : 1
+sum rate : 17.793121, number of sensing error : 1

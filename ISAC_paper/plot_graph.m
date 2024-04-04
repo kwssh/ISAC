@@ -1,5 +1,5 @@
 folder_name = '0401';
-folder_velocity = '100';
+folder_velocity = '10000';
 folder_numuser = '4';
 folder_pattern_1 = strcat(folder_name, '\');
 
