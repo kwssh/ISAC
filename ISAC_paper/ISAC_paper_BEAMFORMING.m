@@ -6,8 +6,8 @@ function sum_rate_final = ISAC_paper_BEAMFORMING()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 1;
-    PARAM.NUM_TARGET = 0;
+    PARAM.NUM_USER = 4;
+    PARAM.NUM_TARGET = 2;
     PARAM.NUM_ANTENNA = 12;
     PARAM.NUM_EPISODE = 100;
 
