@@ -1,6 +1,6 @@
 function [W_opt, R_opt] = get_init(num_antenna, num_user, num_target, sensing_th, p_max, steering_target, steering_target_her, distance_target)
 
-    cvx_begin
+    cvx_begin quiet
 
         cvx_solver Mosek
 
