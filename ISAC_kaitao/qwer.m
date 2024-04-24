@@ -59,7 +59,7 @@ function sum_rate_final = qwer()
         % [new_A_opt, new_E_opt] = get_period(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH, PARAM.GAMMA);
     
         %new_uav = get_uav_trajectory(old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.N, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH);
-        new_uav = get_uav_trajectory_BCD(distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.N, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH);
+        new_uav = get_uav_trajectory_BCD(distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.N, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, PARAM, old_uav);
     
     
     

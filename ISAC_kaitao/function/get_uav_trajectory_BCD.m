@@ -1,11 +1,11 @@
-function uav = get_uav_trajectory_BCD(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th)
+function uav = get_uav_trajectory_BCD(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav)
 
 
     cvx_begin
 
         cvx_solver Mosek
 
-        variable z_user(num_user, N)
+        %variable z_user(num_user, N)
         expressions user_rate_ISAC_user(num_user, num_target, N)
         
         for n = 1 : N
@@ -14,7 +14,7 @@ function uav = get_uav_trajectory_BCD(distance_user, distance_target, num_user, 
                     user_rate_ISAC_user(k,j,n) = log(1 + gamma_0 * (num_antenna * p_max - distance_target(j,n) * sensing_th) * inv_pos(z_user(k,n))) / log(2);
                 end
 
-                1000 * z_user(k,n) >= 1000 * distance_user(k,n);
+                z_user(k,n) >= norm([PARAM.USER(k, 1) - uav(n, 1), PARAM.USER(k, 2) - uav(n, 2), PARAM.UAV_Z]);
             end
         end
 

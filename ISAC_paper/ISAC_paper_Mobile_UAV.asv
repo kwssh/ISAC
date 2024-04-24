@@ -32,7 +32,7 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.T = 5;
     PARAM.N = 5;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 30;
+    PARAM.V_MAX = 50;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
