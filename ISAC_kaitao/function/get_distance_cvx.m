@@ -1,9 +1,7 @@
-function distance = get_distance(x, uav, uav_z)
+function distance = get_distance_cvx(x, uav, uav_z, distance)
 
     num_x = size(x,1);
     num_time_slot = size(uav,1);
-
-    distance = zeros(num_x, num_time_slot);
 
     for k = 1 : num_x
         for j = 1 : num_time_slot

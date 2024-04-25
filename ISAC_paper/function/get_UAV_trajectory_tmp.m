@@ -90,8 +90,8 @@ function uav = get_UAV_trajectory_tmp(uav_t, W_opt, R_opt, N, num_user, num_targ
                 uav(1,1) == uav_t(1,1);
                 uav(1,2) == uav_t(1,2);
 
-                %uav(N,1) == uav_t(N,1);
-                %uav(N,2) == uav_t(N,2);
+                uav(N,1) == uav_t(N,1);
+                uav(N,2) == uav_t(N,2);
             else
                 velocity_UAV = norm([uav(n,1) - uav(n-1,1), uav(n,2) - uav(n-1,2)]);
                 velocity_UAV <= V_max * delta_t;
