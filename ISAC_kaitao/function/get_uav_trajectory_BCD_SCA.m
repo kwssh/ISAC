@@ -1,7 +1,4 @@
-function uav = get_uav_trajectory_BCD_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t)
-
-    E_opt = ones(num_user, num_target, N);
-    A_opt = ones(num_user, N);
+function uav = get_uav_trajectory_BCD_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration)
 
     num_episode_BCD = 10^6;
     user_rate_episode_BCD = zeros(num_user, N, num_episode_BCD);
@@ -11,7 +8,7 @@ function uav = get_uav_trajectory_BCD_SCA(distance_user, distance_target, num_us
    
     for episode_BCD = 1 : num_episode_BCD
 
-        uav= get_trajectory_user_SCA(distance_user_l, distance_target_l, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt);
+        uav= get_trajectory_user_SCA(distance_user_l, distance_target_l, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration);
         distance_target_l = get_distance(PARAM.TARGET, uav, PARAM.UAV_Z);
         distance_user_l = get_distance(PARAM.USER, uav, PARAM.UAV_Z);
 

@@ -1,4 +1,4 @@
-function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt)
+function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration)
 
     num_episode_SCA = 10^6;
     user_rate_episode_SCA = zeros(num_user, N, num_episode_SCA);
@@ -21,9 +21,12 @@ function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user,
             expressions user_rate_ISAC_target(num_user, num_target, N)
             expressions sensing_constraint(num_target, N)
             expressions distance_target_new(num_target, N)
+            expressions distance_user_new(num_user, N)
+            expressions user_rate_th(num_user, N)
+            expressions user_rate_ISAC_sum(num_user, N)
     
             distance_target_new = get_distance_cvx(PARAM.TARGET, uav, PARAM.UAV_Z, distance_target_new);
-            
+
             for n = 1 : N
                 for k = 1 : num_user
     
@@ -35,7 +38,7 @@ function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user,
                         user_rate_ISAC_tmp = -gamma_0 * (num_antenna * p_max - z_target_l(j,n) * sensing_th) * (z_user(k,n) - z_user_l(k,n)) / (z_user_l(k,n)^2 + gamma_0 * (num_antenna * p_max - z_target_l(j,n) * sensing_th) * z_user_l(k,n)) / log(2);
                         user_rate_ISAC_target(k,j,n) = user_rate_ISAC_tmp + log2(1 + gamma_0 * (num_antenna * p_max - z_target_l(j,n) * sensing_th) / z_user_l(k,n));
     
-                        user_rate_comm_tmp_tmp = (rel_entr(z_user(k,n) / gamma_0* num_antenna* p_max, z_user(k,n) / (gamma_0* num_antenna* p_max + 1)) + rel_entr(z_user(k,n) / (gamma_0* num_antenna* p_max + 1), z_user(k,n) / gamma_0* num_antenna* p_max)) / log(2);
+                        user_rate_comm_tmp_tmp = (rel_entr(z_user(k,n) / (gamma_0* num_antenna* p_max), z_user(k,n) / (gamma_0* num_antenna* p_max) + 1) + rel_entr(z_user(k,n) / (gamma_0* num_antenna* p_max) + 1, z_user(k,n) / (gamma_0* num_antenna* p_max))) / log(2);
                         
                         user_rate_ISAC(k,n) = user_rate_ISAC(k,n) + E_opt(k,j,n) * (user_rate_ISAC_target(k,j,n) - user_rate_comm_tmp_tmp);
     
@@ -64,15 +67,19 @@ function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user,
                     velocity_UAV <= V_max * delta_t;
                 end
             end
-    
+
             maximize(sum(sum(user_rate)))
+
+            for i = 1:isac_duration:N
+                sum(user_rate(:,i:i+isac_duration-1),2) >= rate_th;
+            end
     
         cvx_end
 
         user_rate_episode_SCA(:,:,episode_SCA) = user_rate;
 
         if episode_SCA > 1
-            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA)) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1))))) <= 0.01
+            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= 0.01
                 break
             end
         end
