@@ -70,9 +70,9 @@ function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user,
 
             maximize(sum(sum(user_rate)))
 
-            for i = 1:isac_duration:N
-                sum(user_rate(:,i:i+isac_duration-1),2) >= rate_th;
-            end
+            % for i = 1:isac_duration:N
+            %     sum(user_rate(:,i:i+isac_duration-1),2) >= rate_th;
+            % end
     
         cvx_end
 
