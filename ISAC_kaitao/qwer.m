@@ -8,7 +8,7 @@ function sum_rate_final = qwer()
     PARAM.SCALING = 1000;
 
     PARAM.NUM_USER = 4;
-    PARAM.NUM_TARGET = 1;
+    PARAM.NUM_TARGET = 2;
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^(6);
 
@@ -16,13 +16,13 @@ function sum_rate_final = qwer()
     PARAM.UAV_START = [270 200];
     PARAM.UAV_END = [530 200];
     PARAM.UAV_Z = 30;
-    PARAM.TARGET = [400 300];
+    PARAM.TARGET = [450 130; 350 130];
 
     PARAM.NOISE_POWER = 10^(-14);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
     PARAM.SENSING_TH_db = -7;
-    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3) * 0;
+    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
@@ -39,7 +39,7 @@ function sum_rate_final = qwer()
     PARAM.ISAC_TIME_SLOT = 2;
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME / PARAM.ISAC_TIME_SLOT;
 
-    PARAM.V_MAX = 100;
+    PARAM.V_MAX = 10000;
     PARAM.ETA = 10^(-6);
     PARAM.RATE_TH = 0.25;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%

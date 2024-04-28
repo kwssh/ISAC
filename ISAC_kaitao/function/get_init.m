@@ -21,6 +21,11 @@ function [A, E, A_bar, E_bar, uav_init] = get_init(start_x, end_x, uav_y, N, num
         end
     end
 
+    C(1,1) = 0;
+    C(2,3) = 1;
+    C(1,5) = 1;
+    C(2,5) = 0;
+
     for n = 1 : N
         for i = 1 : num_user
             for j = 1: num_target
