@@ -20,7 +20,7 @@ function uav = get_uav_trajectory_BCD_SCA(distance_user, distance_target, num_us
             330, 350;  % 첫 번째 꼭지점
             370, 450;  % 두 번째 꼭지점
             434, 350;  % 두 번째 꼭지점
-            485.2, 270;  % 세 번째 꼭지점
+            255, 270;  % 세 번째 꼭지점
             530, 200;  % 끝점 q_F
                 ];
 

@@ -15,6 +15,9 @@ function [A, E, A_bar, E_bar, uav_init] = get_init(start_x, end_x, uav_y, N, num
         A(:, i) = eye_matrix(:, col_index);
     end
 
+    A(1,5) = 1;
+    A(2,5) = 0;
+
     for i = 1:isac_duration:N
         for j = 1 : num_target
             C(j,i+j-1) = 1;
