@@ -21,8 +21,8 @@ function sum_rate_final = qwer()
     PARAM.NOISE_POWER = 10^(-14);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH_db = -7;
-    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
+    PARAM.SENSING_TH_db = -16;
+    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3) * 0;
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
@@ -39,7 +39,7 @@ function sum_rate_final = qwer()
     PARAM.ISAC_TIME_SLOT = 2;
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME / PARAM.ISAC_TIME_SLOT;
 
-    PARAM.V_MAX = 100;
+    PARAM.V_MAX = 10000;
     PARAM.ETA = 10^(-6);
     PARAM.RATE_TH = 0.25;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%

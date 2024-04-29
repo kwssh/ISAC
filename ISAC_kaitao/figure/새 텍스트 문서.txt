@@ -2,14 +2,16 @@ K>> x = [-16 -13 -10 -7];
 K>> y_UAV = [17.15594827 16.654112 14.9721069 14.96854];
 K>> y_comm = [17.4643 17.4643 17.4643 17.4643];
 K>> y_SF = [13.52115 13.52115 13.520335 13.507968];
+y_FHF = [15.29536 15.09094 14.90553 14.8427];
 K>> grid on
 hold on
 box on
 K>> plot(x, y_comm, 'o-', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'red');
 K>> plot(x, y_UAV, 'o-', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'green');
+plot(x, y_FHF, 'o-', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'magent');
 K>> plot(x, y_SF, 'o-', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'blue');
 K>> xlabel('Sensing Threshold (dBm)');
 ylabel('Sum Rate (bps/Hz)');
 K>> xticks(min(x):3:max(x));
 K>> ylim([0 18])
-K>> legend('Communication only', 'Optimizing UAV trajectory', 'Straight forward');
+K>> legend('Communication only', 'Optimizing UAV trajectory', 'FHF','Straight forward', 'location', 'southeast');
