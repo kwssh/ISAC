@@ -11,12 +11,12 @@ function [A, E, A_bar, E_bar, uav_init] = get_init(start_x, end_x, uav_y, N, num
     A(:, 1:num_user) = eye_matrix;
 
     for i = num_user+1:N
-        col_index = mod(i-num_user, num_user) + 1;
+        col_index = mod(i-num_user, num_user);
+        if col_index == 0 
+            col_index = num_user;
+        end
         A(:, i) = eye_matrix(:, col_index);
     end
-
-    A(1,5) = 1;
-    A(2,5) = 0;
 
     for i = 1:isac_duration:N
         for j = 1 : num_target
@@ -25,9 +25,7 @@ function [A, E, A_bar, E_bar, uav_init] = get_init(start_x, end_x, uav_y, N, num
     end
 
     C(1,1) = 0;
-    C(2,3) = 1;
-    C(1,5) = 1;
-    C(2,5) = 0;
+    C(1,4) = 1;
 
     for n = 1 : N
         for i = 1 : num_user
