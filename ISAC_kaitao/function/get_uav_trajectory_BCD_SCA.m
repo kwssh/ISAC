@@ -16,6 +16,8 @@ function uav = get_uav_trajectory_BCD_SCA(distance_user, distance_target, num_us
 
         user_rate_episode_BCD(:,:,episode_BCD) = get_user_rate_real(distance_user_l, distance_target_l, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, A_opt, E_opt, uav, PARAM, PARAM.CHANNEL_GAIN);
 
+        % break
+        
         if episode_BCD > 1
             if abs(sum(sum(user_rate_episode_BCD(:,:,episode_BCD))) - sum(sum(user_rate_episode_BCD(:,:,episode_BCD-1)))) < 0.01
                 break

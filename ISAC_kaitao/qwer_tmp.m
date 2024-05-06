@@ -1,6 +1,5 @@
 function sum_rate_final = qwer()
     clear
-    clc
     format long
     rng(123);
     
@@ -12,17 +11,17 @@ function sum_rate_final = qwer()
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^(6);
 
-    PARAM.USER = [-50 50; 50 50];
-    PARAM.UAV_START = [-100 0];
-    PARAM.UAV_END = [100 0];
-    PARAM.UAV_Z = 1;
-    PARAM.TARGET = [0 0];
+    PARAM.USER = [0 0; 50 50];
+    PARAM.UAV_START = [-10 0];
+    PARAM.UAV_END = [10 0];
+    PARAM.UAV_Z = 30;
+    PARAM.TARGET = [-30 -30;];
 
     PARAM.NOISE_POWER = 10^(-14);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
-    PARAM.SENSING_TH_db = -13;
-    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3) * 0;
+    PARAM.SENSING_TH_db = -7;
+    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
@@ -32,15 +31,15 @@ function sum_rate_final = qwer()
     PARAM.CHANNEL_GAIN = 10^(-6);
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
-    PARAM.TOTAL_TIME = 4;
-    PARAM.TOTAL_TIME_SLOT = 4;
+    PARAM.TOTAL_TIME = 12;
+    PARAM.TOTAL_TIME_SLOT = 12;
     PARAM.TOTAL_DURATION = PARAM.TOTAL_TIME / PARAM.TOTAL_TIME_SLOT;
 
-    PARAM.ISAC_TIME_SLOT = 1;
+    PARAM.ISAC_TIME_SLOT = 3;
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME / PARAM.ISAC_TIME_SLOT;
 
-    PARAM.V_MAX = 100;
-    PARAM.ETA = 10^(-3);
+    PARAM.V_MAX = 30;
+    PARAM.ETA = 10^(-4);
     PARAM.RATE_TH = 0.25;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
@@ -50,13 +49,6 @@ function sum_rate_final = qwer()
         
         if episode == 1
            [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION);
-
-           old_A_opt(1,2) = 1;
-           old_A_opt(2,2) = 0;
-           old_A_opt(1,3) = 0;
-           old_A_opt(2,3) = 1;
-
-           old_A_bar_opt = old_A_opt;
         end
 
         distance_user = get_distance(PARAM.USER, old_uav, PARAM.UAV_Z);

@@ -80,6 +80,8 @@ function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user,
 
         user_rate_episode_SCA(:,:,episode_SCA) = user_rate;
 
+        % break
+
         if episode_SCA > 1
             if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= 0.01
                 break
