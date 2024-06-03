@@ -1,4 +1,4 @@
-function uav = get_trajectory_user_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration)
+function [uav, z_user] = get_trajectory_user_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration)
 
     num_episode_SCA = 10^6;
     user_rate_episode_SCA = zeros(num_user, N, num_episode_SCA);
