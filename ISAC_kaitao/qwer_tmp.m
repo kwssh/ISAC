@@ -62,8 +62,8 @@ function sum_rate_final = qwer()
         % [new_A_opt, new_E_opt] = get_period(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH, PARAM.GAMMA);
     
         %new_uav = get_uav_trajectory(old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.N, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH);
-        new_uav = get_uav_trajectory_BCD_SCA(distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, PARAM, old_uav, PARAM.V_MAX, PARAM.TOTAL_DURATION, old_A_opt, old_E_opt, PARAM.RATE_TH, PARAM.ISAC_DURATION);
-    
+        [new_uav, user_rate] = get_uav_trajectory_BCD_SCA(distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, PARAM, old_uav, PARAM.V_MAX, PARAM.TOTAL_DURATION, old_A_opt, old_E_opt, PARAM.RATE_TH, PARAM.ISAC_DURATION);
+
         new_distance_user = get_distance(PARAM.USER, new_uav, PARAM.UAV_Z);
         new_distance_target = get_distance(PARAM.TARGET, new_uav, PARAM.UAV_Z);
 
@@ -75,7 +75,7 @@ function sum_rate_final = qwer()
         % objective_val_episode(:,:,episode) = get_user_rate_real(new_distance_user, new_distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, old_A_opt, old_E_opt, new_uav, PARAM, PARAM.CHANNEL_GAIN);
    
         if episode > 1
-            if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.0001
+            if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.01
                 break
             end
         end
