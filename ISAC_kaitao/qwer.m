@@ -6,18 +6,18 @@ function sum_rate_final = qwer()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 2;
-    PARAM.NUM_TARGET = 1;
+    PARAM.NUM_USER = 4;
+    PARAM.NUM_TARGET = 4;
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^(6);
 
-    PARAM.USER = [200 200; 0 50];
-    PARAM.UAV_START = [-10 0];
-    PARAM.UAV_END = [10 0];
-    PARAM.UAV_Z = 30;
-    PARAM.TARGET = [0 100];
+    PARAM.USER = [250 400; 350 450; 450 450; 550 400];
+    PARAM.UAV_START = [270 200];
+    PARAM.UAV_END = [530 200];
+    PARAM.UAV_Z = 40;
+    PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
 
-    PARAM.NOISE_POWER = 10^(-14);
+    PARAM.NOISE_POWER = 10^(-10);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
     PARAM.SENSING_TH_db = -7;
@@ -27,18 +27,18 @@ function sum_rate_final = qwer()
     PARAM.RATE_TH = 0.25;
     PARAM.RATE_TH_SCALING = PARAM.RATE_TH * PARAM.SCALING^2;
 
-    PARAM.P_MAX = 0.5;
-    PARAM.CHANNEL_GAIN = 10^(-6);
+    PARAM.P_MAX = 0.1;
+    PARAM.CHANNEL_GAIN = 10^(-3);
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
-    PARAM.TOTAL_TIME = 3;
-    PARAM.TOTAL_TIME_SLOT = 3;
-    PARAM.TOTAL_DURATION = PARAM.TOTAL_TIME / PARAM.TOTAL_TIME_SLOT;
+    PARAM.TOTAL_TIME = 80;
+    PARAM.TOTAL_TIME_SLOT = 320;
+    PARAM.TOTAL_DURATION = 0.25;
 
-    PARAM.ISAC_TIME_SLOT = 1;
+    PARAM.ISAC_TIME_SLOT = 4;
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME / PARAM.ISAC_TIME_SLOT;
 
-    PARAM.V_MAX = 100;
+    PARAM.V_MAX = 30;
     PARAM.ETA = 10^(-4);
     PARAM.RATE_TH = 0.25;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
@@ -55,7 +55,7 @@ function sum_rate_final = qwer()
         distance_target = get_distance(PARAM.TARGET, old_uav, PARAM.UAV_Z);
     
         [new_A_bar_opt, new_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
-        [new_A_opt, new_E_opt] = get_association(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME, PARAM.ETA, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
+        [new_A_opt, new_E_opt] = get_association(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME_SLOT, PARAM.ETA, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
         
         % [new_A_opt, new_E_opt] = get_period_tmp(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH, PARAM.GAMMA);
         % [new_A_opt, new_E_opt] = get_period(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.N, PARAM.ETA, PARAM.N_L, PARAM.L, PARAM.RATE_TH, PARAM.GAMMA);

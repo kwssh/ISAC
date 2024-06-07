@@ -11,7 +11,7 @@ function uav = get_uav_trajectory_BCD_SCA(distance_user, distance_target, num_us
         [uav, z_user]= get_trajectory_user_SCA(distance_user_l, distance_target_l, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration);
         % fig3 = plot_UAV_trajectory(uav, PARAM);
 
-        [z_traget]= get_trajectory_target_SCA(uav, z_user, gamma_0, num_antenna, p_max, A_opt, E_opt, N, num_user, num_target, sensing_th, PARAM, isac_duration, rate_th);
+        % [z_traget]= get_trajectory_target_SCA(uav, z_user, gamma_0, num_antenna, p_max, A_opt, E_opt, N, num_user, num_target, sensing_th, PARAM, isac_duration, rate_th);
 
         distance_target_l = get_distance(PARAM.TARGET, uav, PARAM.UAV_Z);
         distance_user_l = get_distance(PARAM.USER, uav, PARAM.UAV_Z);
