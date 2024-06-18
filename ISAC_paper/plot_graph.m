@@ -1,6 +1,6 @@
-folder_name = '0422';
-folder_velocity = '50';
-folder_numuser = '1';
+folder_name = '0401';
+folder_velocity = '10000';
+folder_numuser = '4';
 folder_pattern_1 = strcat(folder_name, '\');
 
 folder_pattern_ISAC = strcat(folder_name, '_-*_', folder_velocity);

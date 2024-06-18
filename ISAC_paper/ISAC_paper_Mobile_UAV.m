@@ -8,31 +8,31 @@ function sum_rate_final = ISAC_paper_Mobile_UAV()
     PARAM.SCALING = 1000;
     PARAM.SCALING_TMP = 1;
 
-    PARAM.NUM_USER = 1;
+    PARAM.NUM_USER = 2;
     PARAM.NUM_TARGET = 1;
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^6;
 
-    PARAM.USER = [300 300];
-    PARAM.UAV_START = [-10 0];
-    PARAM.UAV_END = [10 0];
+    PARAM.USER = [370 400; 630 400];
+    PARAM.UAV_START = [450 525];
+    PARAM.UAV_END = [550 525];
     PARAM.UAV_Z = 30;
-    PARAM.TARGET = [-100 100];
+    PARAM.TARGET = [520 596];
     
     PARAM.NOISE_POWER = 10^-14;
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
 
     PARAM.SENSING_TH_db = -10;
-    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
+    PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3)* 0;
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.5;
     PARAM.CHANNEL_GAIN = 10^(-6);
 
-    PARAM.T = 3;
-    PARAM.N = 3;
+    PARAM.T = 11;
+    PARAM.N = 11;
     PARAM.DELTA_T = PARAM.T / PARAM.N;
-    PARAM.V_MAX = 1000;
+    PARAM.V_MAX = 30;
     PARAM.TRUST_REGION = PARAM.DELTA_T * PARAM.V_MAX;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
