@@ -22,7 +22,7 @@ function sum_rate_final = qwer()
 
     PARAM.SENSING_TH_db = -7;
     % PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
-    PARAM.SENSING_TH = 6 * 10^(-5);
+    PARAM.SENSING_TH = 12 * 10^(-5);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
@@ -32,8 +32,8 @@ function sum_rate_final = qwer()
     PARAM.CHANNEL_GAIN = 10^(-3);
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
-    PARAM.TOTAL_TIME = 80;
-    PARAM.TOTAL_DURATION = 4;
+    PARAM.TOTAL_TIME = 40;
+    PARAM.TOTAL_DURATION = 0.25;
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;
 
     PARAM.ISAC_TIME = 20;
@@ -51,7 +51,7 @@ function sum_rate_final = qwer()
         
         if episode == 1
            % [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION);
-           [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init_fix(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION);
+           [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init_fix(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION, PARAM);
         end
 
         distance_user = get_distance(PARAM.USER, old_uav, PARAM.UAV_Z);

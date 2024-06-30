@@ -1,11 +1,14 @@
-function [A, E, A_bar, E_bar, uav_init] = get_init_fix(start_x, end_x, uav_y, N, num_user, num_target, isac_duration)
+function [A, E, A_bar, E_bar, uav_init] = get_init_fix(start_x, end_x, uav_y, N, num_user, num_target, isac_duration, PARAM)
 
     rng(124);
 
     uav_init_tmp = linspace(start_x, end_x, N);
     uav_init = [uav_init_tmp' ones(N, 1) * uav_y];
 
-    A = ones(num_user, N) * 0.1;
+    distance_target = get_distance(PARAM.TARGET, uav_init, PARAM.UAV_Z);
+    sensing_feasible = PARAM.NUM_ANTENNA * PARAM.P_MAX - distance_target.^2 * PARAM.SENSING_TH;
+
+    A = zeros(num_user, N) * 0.1;
     C = zeros(num_target, N) * 0.1;
     E = zeros(num_user, num_target, N);
 
