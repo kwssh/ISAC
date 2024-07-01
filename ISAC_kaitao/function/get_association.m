@@ -68,7 +68,7 @@ function [A, E] = get_association(A_bar, E_bar, num_antenna, p_max, distance_use
 
             for i = 1:isac_duration:N
                 sum(E_user_sum(:,:,i:i+isac_duration-1), 3) == 1;
-                sum(user_rate_th(:,i:i+isac_duration-1),2) / isac_duration >= rate_th;
+                % sum(user_rate_th(:,i:i+isac_duration-1),2) / isac_duration >= rate_th;
             end
 
             E >= 0;

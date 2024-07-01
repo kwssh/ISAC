@@ -40,7 +40,11 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
     
                         user_rate_comm_tmp_tmp = (rel_entr(z_user(k,n) / (gamma_0* num_antenna* p_max), z_user(k,n) / (gamma_0* num_antenna* p_max) + 1) + rel_entr(z_user(k,n) / (gamma_0* num_antenna* p_max) + 1, z_user(k,n) / (gamma_0* num_antenna* p_max))) / log(2);
                         
-                        user_rate_ISAC(k,n) = user_rate_ISAC(k,n) + E_opt(k,j,n) * (user_rate_ISAC_target(k,j,n) - user_rate_comm_tmp_tmp);
+                        if E_opt(k,j,n) == 0
+                            user_rate_ISAC(k,n) = user_rate_ISAC(k,n);
+                        else
+                            user_rate_ISAC(k,n) = user_rate_ISAC(k,n) + E_opt(k,j,n) * (user_rate_ISAC_target(k,j,n) - user_rate_comm_tmp_tmp);
+                        end
     
                     end
     

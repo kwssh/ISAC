@@ -5,19 +5,18 @@ function [A, E, A_bar, E_bar, uav_init] = get_init_fix(start_x, end_x, uav_y, N,
     uav_init_tmp = linspace(start_x, end_x, N);
     uav_init = [uav_init_tmp' ones(N, 1) * uav_y];
 
-    distance_target = get_distance(PARAM.TARGET, uav_init, PARAM.UAV_Z);
-    sensing_feasible = PARAM.NUM_ANTENNA * PARAM.P_MAX - distance_target.^2 * PARAM.SENSING_TH;
+    [A, A_bar, E, E_bar] = get_association_rule(PARAM, uav_init);
 
-    A = zeros(num_user, N) * 0.1;
-    C = zeros(num_target, N) * 0.1;
-    E = zeros(num_user, num_target, N);
-
-    cols = N / num_user;
-
-    A(1, 1:cols) = 0.9;
-    A(2, cols+1:2*cols) = 0.9;
-    A(3, 2*cols+1:3*cols) = 0.9;
-    A(4, 3*cols+1:4*cols) = 0.9;
+    % A = zeros(num_user, N) * 0.1;
+    % C = zeros(num_target, N) * 0.1;
+    % E = zeros(num_user, num_target, N);
+    % 
+    % cols = N / num_user;
+    % 
+    % A(1, 1:cols) = 0.9;
+    % A(2, cols+1:2*cols) = 0.9;
+    % A(3, 2*cols+1:3*cols) = 0.9;
+    % A(4, 3*cols+1:4*cols) = 0.9;
 
     % eye_matrix = eye(num_user);
     % A(:, 1:num_user) = eye_matrix;
@@ -30,11 +29,11 @@ function [A, E, A_bar, E_bar, uav_init] = get_init_fix(start_x, end_x, uav_y, N,
     %     A(:, i) = eye_matrix(:, col_index);
     % end
     % 
-    for i = 1:isac_duration:N
-        for j = 1 : num_target
-            C(j,i+j-1) = 1;
-        end
-    end
+    % for i = 1:isac_duration:N
+    %     for j = 1 : num_target
+    %         C(j,i+j-1) = 1;
+    %     end
+    % end
     % 
     % C(1,1) = 0;
     % C(1,4) = 1;
@@ -62,5 +61,5 @@ function [A, E, A_bar, E_bar, uav_init] = get_init_fix(start_x, end_x, uav_y, N,
         end
     end
 
-    [A_bar, E_bar] = get_slack_variable(A, E);
+    % [A_bar, E_bar] = get_slack_variable(A, E);
 end
