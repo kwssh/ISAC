@@ -22,7 +22,7 @@ function sum_rate_final = qwer()
 
     PARAM.SENSING_TH_db = -7;
     % PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
-    PARAM.SENSING_TH = 12 * 10^(-5);
+    PARAM.SENSING_TH = 12 * 10^(-5) * 0;
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
@@ -36,7 +36,7 @@ function sum_rate_final = qwer()
     PARAM.TOTAL_DURATION = 0.25;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
-    PARAM.ISAC_TIME = 20;                                                     % T_L
+    PARAM.ISAC_TIME = 40;                                                     % T_L
     PARAM.ISAC_TIME_SLOT_NUM = PARAM.TOTAL_TIME / PARAM.ISAC_TIME;            % L
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
@@ -52,6 +52,11 @@ function sum_rate_final = qwer()
         if episode == 1
            [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION, PARAM);
            % [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init_fix(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION, PARAM);
+        
+           old_A_opt = old_A_bar_opt;
+           old_E_opt = old_E_bar_opt;
+
+           [old_A_bar_opt, old_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
         end
 
         distance_user = get_distance(PARAM.USER, old_uav, PARAM.UAV_Z);

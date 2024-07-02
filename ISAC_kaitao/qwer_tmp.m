@@ -1,22 +1,23 @@
 function sum_rate_final = qwer()
     clear
     format long
-    rng(123);
-    
+    rng('shuffle');
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 2;
+    PARAM.NUM_USER = 4;
     PARAM.NUM_TARGET = 1;
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^(6);
 
-    % PARAM.USER = [250 400; 350 450; 450 450; 550 400];
-    PARAM.USER = [0 50; 200 200];
-    PARAM.UAV_START = [-10 0];
-    PARAM.UAV_END = [10 0];
+    PARAM.USER = [250 400; 350 450; 450 450; 550 400];
+    PARAM.UAV_START = [270 200];
+    PARAM.UAV_END = [530 200];
+    % PARAM.USER = [0 50; 200 200];
+    % PARAM.UAV_START = [-10 0];
+    % PARAM.UAV_END = [10 0];
     PARAM.UAV_Z = 40;
-    PARAM.TARGET = [0 100];
+    PARAM.TARGET = [400 300];
 
     PARAM.NOISE_POWER = 10^(-10);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
@@ -33,11 +34,11 @@ function sum_rate_final = qwer()
     PARAM.CHANNEL_GAIN = 10^(-3);
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
-    PARAM.TOTAL_TIME = 3;                                                    % T
+    PARAM.TOTAL_TIME = 4;                                                    % T
     PARAM.TOTAL_DURATION = 1;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
-    PARAM.ISAC_TIME = 3;                                                     % T_L
+    PARAM.ISAC_TIME = 4;                                                     % T_L
     PARAM.ISAC_TIME_SLOT_NUM = PARAM.TOTAL_TIME / PARAM.ISAC_TIME;            % L
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
@@ -53,10 +54,31 @@ function sum_rate_final = qwer()
         if episode == 1
            [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION, PARAM);
            % [old_A_opt, old_E_opt, old_A_bar_opt, old_E_bar_opt, old_uav] = get_init_fix(PARAM.UAV_START(1), PARAM.UAV_END(1), PARAM.UAV_START(2), PARAM.TOTAL_TIME_SLOT, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.ISAC_DURATION, PARAM);
+            
+           % old_A_opt = old_A_bar_opt;
+           % old_E_opt = old_E_bar_opt;
+           % 
+           % [old_A_bar_opt, old_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
+
+           % old_A_bar_opt = old_A_opt;
+           % old_E_bar_opt = old_E_opt;
+
+           old_A_opt = randi([0, 1], [PARAM.NUM_USER, PARAM.TOTAL_TIME_SLOT]);
+           old_C_opt = randi([0, 1], [PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT]);
+           % 
+           % old_A_bar_opt = rand([PARAM.NUM_USER, PARAM.TOTAL_TIME_SLOT]);
+           % old_C_bar_opt = rand([PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT]);
+           % 
+           for n = 1 : PARAM.TOTAL_TIME_SLOT
+               for i = 1 : PARAM.NUM_USER
+                   for j = 1: PARAM.NUM_TARGET
+                        old_E_opt(i,j,n) = old_A_opt(i,n) * old_C_opt(j,n);
+                        % old_E_bar_opt(i,j,n) = old_A_bar_opt(i,n) * old_C_bar_opt(j,n);
+                   end
+               end
+           end
 
            [old_A_bar_opt, old_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
-
-
         end
 
         distance_user = get_distance(PARAM.USER, old_uav, PARAM.UAV_Z);
