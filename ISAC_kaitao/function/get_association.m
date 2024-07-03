@@ -20,8 +20,8 @@ function [A, E] = get_association(A_bar, E_bar, num_antenna, p_max, distance_use
             expressions user_rate_quad(num_user, N)
             expressions user_rate_linear(num_user, N)
             expressions x(1+num_target, num_user, N)
-    
-            user_rate_th = get_user_rate(gamma_0, num_antenna, p_max, distance_user, num_user, distance_target, num_target, E, sensing_th, A, user_rate_ISAC_sum);
+
+            user_rate_th = get_user_rate(gamma_0, num_antenna, p_max, distance_user, num_user, distance_target, num_target, E, sensing_th, A, user_rate_ISAC_sum, N);
         
             user_rate_comm = log2(1 + (gamma_0 * num_antenna * p_max ./ (distance_user.^2)));
     
