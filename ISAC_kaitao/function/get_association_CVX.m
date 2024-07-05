@@ -49,4 +49,6 @@ function [A, E] = get_association_CVX(num_antenna, p_max, distance_user, num_use
     
         cvx_end
 
+        
+
 end

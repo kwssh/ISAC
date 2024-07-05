@@ -6,7 +6,7 @@ function [A, E] = get_association(A_bar, E_bar, num_antenna, p_max, distance_use
     user_rate_const = zeros(num_user, N);
     objective_func = zeros(num_user, N, num_episode);
 
-    for episode = 1 : num_episode
+    % for episode = 1 : num_episode
         cvx_begin
             cvx_solver Mosek
     
@@ -80,15 +80,15 @@ function [A, E] = get_association(A_bar, E_bar, num_antenna, p_max, distance_use
     
         cvx_end
 
-        objective_func(:,:,episode) = sum_rate;
+        % objective_func(:,:,episode) = sum_rate;
+        % 
+        % if episode >1
+        %     if sum(sum(objective_func(:,:,episode))) - sum(sum(objective_func(:,:,episode-1))) <= 0.00001
+        %         break
+        %     end
+        % end
+        % 
+        % [A_bar, E_bar] = get_slack_variable(A, E);
 
-        if episode >1
-            if sum(sum(objective_func(:,:,episode))) - sum(sum(objective_func(:,:,episode-1))) <= 0.00001
-                break
-            end
-        end
-
-        [A_bar, E_bar] = get_slack_variable(A, E);
-
-    end
+    % end
 end

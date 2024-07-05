@@ -3,7 +3,7 @@ function [A, E] = get_association_rule(PARAM, uav)
     N_L = PARAM.ISAC_DURATION;
     N = PARAM.TOTAL_TIME_SLOT;
 
-    A = zeros(PARAM.NUM_USER, N);
+    A = ones(PARAM.NUM_USER, N) / PARAM.NUM_USER;
     C = zeros(PARAM.NUM_TARGET, N);
     E = zeros(PARAM.NUM_USER, PARAM.NUM_TARGET, N);
 
@@ -22,10 +22,16 @@ function [A, E] = get_association_rule(PARAM, uav)
         sensing_feasible_block_positive_idx = sensing_feasible_block > 0 ;
         sensing_feasible_block(~sensing_feasible_block_positive_idx) = inf;
 
-        [~, idx_min_target] = min(sensing_feasible_block, [], 2);
+        sensing_feasible_block(isinf(sensing_feasible_block)) = 0;
+        non_zero_sensing_feasible_block_idx = sensing_feasible_block ~= 0;
+        num_non_zero_sensing_feasible_block = sum(non_zero_sensing_feasible_block_idx, 2);
 
-        idx_C = sub2ind(size(C), (1 : PARAM.NUM_TARGET)', col_start - 1 + idx_min_target);
-        C(idx_C) = 1;
+        C(:, col_start : col_end) = non_zero_sensing_feasible_block_idx ./ num_non_zero_sensing_feasible_block;
+
+        % [~, idx_min_target] = min(sensing_feasible_block, [], 2);
+        % 
+        % idx_C = sub2ind(size(C), (1 : PARAM.NUM_TARGET)', col_start - 1 + idx_min_target);
+        % C(idx_C) = 1;
 
         % [~, idx_min_user] = min(distance_user_block, [], 1);
         % 
@@ -41,16 +47,16 @@ function [A, E] = get_association_rule(PARAM, uav)
         % A(idx_A) = 1;
     end
 
-    eye_matrix = eye(PARAM.NUM_USER);
-    A(:, 1:PARAM.NUM_USER) = eye_matrix;
-
-    for i = PARAM.NUM_USER+1:N
-        col_index = mod(i-PARAM.NUM_USER, PARAM.NUM_USER);
-        if col_index == 0 
-            col_index = PARAM.NUM_USER;
-        end
-        A(:, i) = eye_matrix(:, col_index);
-    end
+    % eye_matrix = eye(PARAM.NUM_USER);
+    % A(:, 1:PARAM.NUM_USER) = eye_matrix;
+    % 
+    % for i = PARAM.NUM_USER+1:N
+    %     col_index = mod(i-PARAM.NUM_USER, PARAM.NUM_USER);
+    %     if col_index == 0 
+    %         col_index = PARAM.NUM_USER;
+    %     end
+    %     A(:, i) = eye_matrix(:, col_index);
+    % end
 
     for n = 1 : N
         for i = 1 : PARAM.NUM_USER

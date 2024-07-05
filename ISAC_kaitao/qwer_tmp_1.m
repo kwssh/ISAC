@@ -13,11 +13,13 @@ function sum_rate_final = qwer()
     PARAM.USER = [250 400; 350 450; 450 450; 550 400];
     PARAM.UAV_START = [270 200];
     PARAM.UAV_END = [530 200];
+    PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
     % PARAM.USER = [0 50; 200 200];
     % PARAM.UAV_START = [-10 0];
     % PARAM.UAV_END = [10 0];
+    % PARAM.TARGET = [0 100];
+
     PARAM.UAV_Z = 40;
-    PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
 
     PARAM.NOISE_POWER = 10^(-10);
     PARAM.NOISE_POWER_SCALING = PARAM.NOISE_POWER  * PARAM.SCALING^2;
@@ -34,15 +36,15 @@ function sum_rate_final = qwer()
     PARAM.CHANNEL_GAIN = 10^(-3);
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
-    PARAM.TOTAL_TIME = 8;                                                    % T
+    PARAM.TOTAL_TIME = 5;                                                    % T
     PARAM.TOTAL_DURATION = 1;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
-    PARAM.ISAC_TIME = 8;                                                     % T_L
+    PARAM.ISAC_TIME = 5;                                                     % T_L
     PARAM.ISAC_TIME_SLOT_NUM = PARAM.TOTAL_TIME / PARAM.ISAC_TIME;            % L
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
-    PARAM.V_MAX = 60;
+    PARAM.V_MAX = 1000;
     PARAM.ETA = 10^(-4);  % 8번
     PARAM.RATE_TH = 0.25;
     PARAM.Z = 0.5;
@@ -105,7 +107,7 @@ function sum_rate_final = qwer()
             old_uav = new_uav;
 
             if episode > 1
-                if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.1
+                if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.01
                     break
                 end
             end

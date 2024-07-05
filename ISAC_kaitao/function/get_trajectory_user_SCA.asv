@@ -29,17 +29,29 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
             expressions user_rate_comm_tmp(num_user, N)
             expressions user_rate_ISAC_tmp(num_user, num_target, N)
 
-            % user_rate = zeros(num_user, N);
-            % user_rate_comm = zeros(num_user, N);
-            % user_rate_ISAC = zeros(num_user, N);
-            % user_rate_ISAC_target = zeros(num_user, num_target, N);
-            % sensing_constraint = zeros(num_target, N);
-            % distance_target_new = zeros(num_target, N);
-            % distance_user_new = zeros(num_user, N);
-            % user_rate_th = zeros(num_user, N);
-            % user_rate_ISAC_sum = zeros(num_user, N);
-            % user_rate_comm_tmp = zeros(num_user, N);
-            % user_rate_ISAC_tmp = zeros(num_user, num_target, N);
+            user_rate = zeros(num_user, N);
+            user_rate_comm = zeros(num_user, N);
+            user_rate_ISAC = zeros(num_user, N);
+            user_rate_ISAC_target = zeros(num_user, num_target, N);
+            sensing_constraint = zeros(num_target, N);
+            distance_target_new = zeros(num_target, N);
+            distance_user_new = zeros(num_user, N);
+            user_rate_th = zeros(num_user, N);
+            user_rate_ISAC_sum = zeros(num_user, N);
+            user_rate_comm_tmp = zeros(num_user, N);
+            user_rate_ISAC_tmp = zeros(num_user, num_target, N);
+
+            user_rate_1 = zeros(num_user, N);
+            user_rate_comm_1 = zeros(num_user, N);
+            user_rate_ISAC_1 = zeros(num_user, N);
+            user_rate_ISAC_target_1 = zeros(num_user, num_target, N);
+            sensing_constraint_1 = zeros(num_target, N);
+            distance_target_new_1 = zeros(num_target, N);
+            distance_user_new_1 = zeros(num_user, N);
+            user_rate_th_1 = zeros(num_user, N);
+            user_rate_ISAC_sum_1 = zeros(num_user, N);
+            user_rate_comm_tmp_1 = zeros(num_user, N);
+            user_rate_ISAC_tmp_1 = zeros(num_user, num_target, N);
     
             distance_target_new = get_distance_cvx(PARAM.TARGET, uav, PARAM.UAV_Z, distance_target_new);
 

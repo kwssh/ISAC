@@ -10,6 +10,11 @@ function [A, E, A_bar, E_bar, uav_init] = get_init(start_x, end_x, uav_y, N, num
 
     % [A, E] = get_association_rule(PARAM, uav_init);
     [A, E] = get_association_CVX(PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
+    [A, E] = get_association_rule(PARAM, uav_init);
+
+    
+
+
 
     % E_bar = zeros(num_user, num_target, N);
 

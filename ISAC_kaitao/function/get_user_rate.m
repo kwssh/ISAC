@@ -9,7 +9,9 @@ function user_rate = get_user_rate(gamma_0, num_antenna, p_max, distance_user, n
 
     for k = 1:size(feasible_negative_idx, 1)
         idx = feasible_negative_idx(k, :);
-        E_zero(:, idx(1), idx(2)) = 0;
+        if ~isempty(idx)
+            E_zero(:, idx(1), idx(2)) = 0;
+        end
     end
 
     user_rate_comm = log2(1 + (gamma_0 * num_antenna * p_max ./ (distance_user .* distance_user)));

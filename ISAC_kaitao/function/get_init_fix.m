@@ -5,7 +5,7 @@ function [A, E, A_bar, E_bar, uav_init] = get_init_fix(start_x, end_x, uav_y, N,
     uav_init_tmp = linspace(start_x, end_x, N);
     uav_init = [uav_init_tmp' ones(N, 1) * uav_y];
 
-    [A, A_bar, E, E_bar] = get_association_rule(PARAM, uav_init);
+    [A, E] = get_association_rule(PARAM, uav_init);
 
     % A = zeros(num_user, N) * 0.1;
     % C = zeros(num_target, N) * 0.1;
@@ -53,13 +53,13 @@ function [A, E, A_bar, E_bar, uav_init] = get_init_fix(start_x, end_x, uav_y, N,
     %     C(:, i:min(i+isac_duration-1, N)) = C(:, i:min(i+isac_duration-1, N)) .* scaling_factor;
     % end
     % 
-    for n = 1 : N
-        for i = 1 : num_user
-            for j = 1: num_target
-                E(i,j,n) = A(i,n) * C(j,n);
-            end
-        end
-    end
+    % for n = 1 : N
+    %     for i = 1 : num_user
+    %         for j = 1: num_target
+    %             E(i,j,n) = A(i,n) * C(j,n);
+    %         end
+    %     end
+    % end
 
-    % [A_bar, E_bar] = get_slack_variable(A, E);
+    [A_bar, E_bar] = get_slack_variable(A, E);
 end
