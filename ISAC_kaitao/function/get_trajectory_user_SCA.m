@@ -2,6 +2,7 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
 
     num_episode_SCA = 10^6;
     user_rate_episode_SCA = zeros(num_user, N, num_episode_SCA);
+    uav_episode = zeros(N, 2, num_episode_SCA);
 
     scaling = 1000;
 
@@ -107,11 +108,12 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
         end
 
         user_rate_episode_SCA(:,:,episode_SCA) = user_rate;
+        uav_episode(:,:,episode_SCA) = uav;
 
         % break
 
         if episode_SCA > 1
-            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= 1
+            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= 100
                 break
             end
         end

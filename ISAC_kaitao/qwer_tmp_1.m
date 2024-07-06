@@ -5,19 +5,23 @@ function sum_rate_final = qwer()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
 
-    PARAM.NUM_USER = 4;
-    PARAM.NUM_TARGET = 4;
+    PARAM.NUM_USER = 2;
+    PARAM.NUM_TARGET = 2;
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^(6);
 
-    PARAM.USER = [250 400; 350 450; 450 450; 550 400];
+    % PARAM.USER = [250 400; 350 450; 450 450; 550 400];
+    % PARAM.UAV_START = [270 200];
+    % PARAM.UAV_END = [530 200];
+    % PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
+    PARAM.USER = [250 400; 550 400];
     PARAM.UAV_START = [270 200];
     PARAM.UAV_END = [530 200];
-    PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
+    PARAM.TARGET = [320 160; 480 160];
     % PARAM.USER = [0 50; 200 200];
     % PARAM.UAV_START = [-10 0];
     % PARAM.UAV_END = [10 0];
-    % PARAM.TARGET = [0 100];
+    % PARAM.TARGET = [-50 -50];
 
     PARAM.UAV_Z = 40;
 
@@ -36,11 +40,11 @@ function sum_rate_final = qwer()
     PARAM.CHANNEL_GAIN = 10^(-3);
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
-    PARAM.TOTAL_TIME = 5;                                                    % T
+    PARAM.TOTAL_TIME = 4;                                                    % T
     PARAM.TOTAL_DURATION = 1;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
-    PARAM.ISAC_TIME = 5;                                                     % T_L
+    PARAM.ISAC_TIME = 4;                                                     % T_L
     PARAM.ISAC_TIME_SLOT_NUM = PARAM.TOTAL_TIME / PARAM.ISAC_TIME;            % L
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
@@ -107,7 +111,7 @@ function sum_rate_final = qwer()
             old_uav = new_uav;
 
             if episode > 1
-                if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.01
+                if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.001
                     break
                 end
             end
