@@ -99,14 +99,6 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
     
         cvx_end
 
-        if episode_SCA == 26
-            disp("qwdwqdqw")
-        end
-
-        if strcmp(cvx_status,'Failed')
-            disp("afsefesa")
-        end
-
         user_rate_episode_SCA(:,:,episode_SCA) = user_rate;
         uav_episode(:,:,episode_SCA) = uav;
 

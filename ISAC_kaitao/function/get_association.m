@@ -33,7 +33,7 @@ function [A, E] = get_association(A_bar, E_bar, num_antenna, p_max, distance_use
     
                     x(:,k,n) = [A(k,n) ; E(k,:,n)'];
     
-                    rate_diff = (user_rate_ISAC_user(:,n) - user_rate_comm(k,n)) / 2;
+                    rate_diff = (user_rate_ISAC_user(:,n) - user_rate_comm(k,n)) / 2 / N;
     
                     rate_tmp(1,1,k,n) = user_rate_comm(k,n) / N - ((1-A_bar(k,n))^2 + 1) / (2 * eta);
                     rate_tmp(2:end,1,k,n) = rate_diff;
@@ -91,4 +91,7 @@ function [A, E] = get_association(A_bar, E_bar, num_antenna, p_max, distance_use
         % [A_bar, E_bar] = get_slack_variable(A, E);
 
     % end
+
+    A(A<0) = 0;
+    E(E<0) = 0;
 end
