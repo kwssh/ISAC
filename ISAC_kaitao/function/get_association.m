@@ -92,6 +92,11 @@ function [A, E] = get_association(A_bar, E_bar, num_antenna, p_max, distance_use
 
     % end
 
+    if strcmp('Infeasible', cvx_status)
+        disp("qweqwew")
+    end
+
+
     A(A<0) = 0;
     E(E<0) = 0;
 end

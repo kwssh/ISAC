@@ -4,22 +4,21 @@ function sum_rate_final = qwer()
     rng('shuffle');
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
-
-    % PARAM.NUM_USER = 4;
-    % PARAM.NUM_TARGET = 4;
-    PARAM.NUM_USER = 2;
-    PARAM.NUM_TARGET = 1;
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^(6);
 
-    % PARAM.USER = [250 400; 1000 1000; -1000 1000];
-    % PARAM.UAV_START = [270 200];
-    % PARAM.UAV_END = [530 200];
+    PARAM.USER = [250 400; 350 450; 450 450; 550 400];
+    PARAM.UAV_START = [270 200];
+    PARAM.UAV_END = [530 200];
     % PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
-    PARAM.USER = [0 50; 200 200];
-    PARAM.UAV_START = [-10 0];
-    PARAM.UAV_END = [10 0];
-    PARAM.TARGET = [0 100];
+
+    % PARAM.USER = [-150 150; -75 200; 75 200];
+    % PARAM.UAV_START = [-10 0];
+    % PARAM.UAV_END = [10 0];
+    PARAM.TARGET = [400 100];
+
+    PARAM.NUM_USER = size(PARAM.USER,1);
+    PARAM.NUM_TARGET = size(PARAM.TARGET,1);
 
     PARAM.UAV_Z = 40;
 
@@ -47,7 +46,7 @@ function sum_rate_final = qwer()
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
     PARAM.V_MAX = 1000;
-    PARAM.ETA = 10^(-5);  % 8번
+    PARAM.ETA = 10^(-1);  % 8번
     PARAM.RATE_TH = 0.25;
     PARAM.Z = 0.5;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
@@ -93,8 +92,8 @@ function sum_rate_final = qwer()
             [new_A_bar_opt, new_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
             [new_A_opt, new_E_opt] = get_association(new_A_bar_opt, new_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME_SLOT, PARAM.ETA, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
     
-            new_uav = old_uav;
-            % [new_uav, user_rate] = get_uav_trajectory_BCD_SCA(distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, PARAM, old_uav, PARAM.V_MAX, PARAM.TOTAL_DURATION, new_A_opt, new_E_opt, PARAM.RATE_TH, PARAM.ISAC_DURATION);
+            % new_uav = old_uav;
+            [new_uav, user_rate] = get_uav_trajectory_BCD_SCA(distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, PARAM, old_uav, PARAM.V_MAX, PARAM.TOTAL_DURATION, new_A_opt, new_E_opt, PARAM.RATE_TH, PARAM.ISAC_DURATION);
     
             new_distance_user = get_distance(PARAM.USER, new_uav, PARAM.UAV_Z);
             new_distance_target = get_distance(PARAM.TARGET, new_uav, PARAM.UAV_Z);
@@ -110,7 +109,7 @@ function sum_rate_final = qwer()
             old_uav = new_uav;
 
             if episode > 1
-                if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.0001
+                if abs(sum(sum(objective_val_episode(episode))) - sum(sum(objective_val_episode(episode-1)))) < 0.001
                     break
                 end
             end
