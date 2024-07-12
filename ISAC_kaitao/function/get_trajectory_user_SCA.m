@@ -103,13 +103,17 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
             disp("qweqwew")
         end
 
+        if strcmp('Failed', cvx_status)
+            disp("qweqwew")
+        end
+
         user_rate_episode_SCA(:,:,episode_SCA) = user_rate;
         uav_episode(:,:,episode_SCA) = uav;
 
         % break
 
         if episode_SCA > 1
-            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= 0.001
+            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= 50
                 break
             end
         end
