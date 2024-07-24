@@ -5,7 +5,7 @@ function sum_rate_final = qwer()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
     PARAM.NUM_ANTENNA = 16;
-    PARAM.NUM_EPISODE = 10^(6);
+    PARAM.NUM_EPISODE = 10^(2);
 
     PARAM.USER = [250 400; 350 450; 450 450; 550 400];
     PARAM.UAV_START = [270 200];
