@@ -1,4 +1,4 @@
-function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration)
+function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, distance_target, num_user, num_target, N, gamma_0, p_max, num_antenna, sensing_th, PARAM, uav_t, V_max, delta_t, A_opt, E_opt, rate_th, isac_duration, episilon_sca)
 
     num_episode_SCA = 10^6;
     user_rate_episode_SCA = zeros(num_user, N, num_episode_SCA);
@@ -113,7 +113,7 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
         % break
 
         if episode_SCA > 1
-            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= 50
+            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= episilon_sca
                 break
             end
         end
