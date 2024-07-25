@@ -113,7 +113,7 @@ function [uav, z_user, user_rate] = get_trajectory_user_SCA(distance_user, dista
         % break
 
         if episode_SCA > 1
-            if abs(sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) <= episilon_sca
+            if sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1))) <= episilon_sca
                 break
             end
         end
