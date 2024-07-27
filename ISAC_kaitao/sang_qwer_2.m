@@ -10,7 +10,7 @@ function sum_rate_final = qwer()
     PARAM.USER = [250 400; 350 450; 450 450; 550 400];
     PARAM.UAV_START = [270 200];
     PARAM.UAV_END = [530 200];
-    PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
+    PARAM.TARGET = [320 160; 480 160];
 
     % PARAM.USER = [-100 50; 0 300; 100 50];
     % PARAM.UAV_START = [-100 0];
@@ -27,7 +27,7 @@ function sum_rate_final = qwer()
 
     PARAM.SENSING_TH_db = -7;
     % PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
-    PARAM.SENSING_TH = 12 * 10^(-5) * 0;
+    PARAM.SENSING_TH = 12 * 10^(-5);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
@@ -46,10 +46,10 @@ function sum_rate_final = qwer()
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
     PARAM.V_MAX = 171;
-    PARAM.ETA = 10^(-1);  % 8번
+    PARAM.ETA = 10^(-1) * 3;  % 8번
     PARAM.ETA_MIN = 10^(-10);
     % PARAM.ETA = 9.536743164062501e-08;
-    PARAM.Z = 0.99;
+    PARAM.Z = 1;
     PARAM.EPISILON_SCA = 1;
     PARAM.EPISILON_BCD = 0.01;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
@@ -98,7 +98,7 @@ function sum_rate_final = qwer()
             end
 
             [new_A_bar_opt, new_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
-            [new_A_opt, new_E_opt] = get_association(old_A_bar_opt, old_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME_SLOT, PARAM.ETA, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
+            [new_A_opt, new_E_opt] = get_association(new_A_bar_opt, new_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME_SLOT, PARAM.ETA, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
     
             % new_A_opt = old_A_opt;
             % new_E_opt = old_E_opt;
