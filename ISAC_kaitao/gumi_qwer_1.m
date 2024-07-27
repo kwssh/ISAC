@@ -10,7 +10,7 @@ function sum_rate_final = qwer()
     PARAM.USER = [250 400; 350 450; 450 450; 550 400];
     PARAM.UAV_START = [270 200];
     PARAM.UAV_END = [530 200];
-    PARAM.TARGET = [320 160; 480 160];
+    PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
 
     % PARAM.USER = [-100 50; 0 300; 100 50];
     % PARAM.UAV_START = [-100 0];
@@ -30,7 +30,7 @@ function sum_rate_final = qwer()
     PARAM.SENSING_TH = 12 * 10^(-5);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
-    PARAM.RATE_TH = 0.25;
+    PARAM.RATE_TH = 1;
     PARAM.RATE_TH_SCALING = PARAM.RATE_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.1;
