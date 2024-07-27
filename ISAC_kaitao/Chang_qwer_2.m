@@ -27,10 +27,10 @@ function sum_rate_final = qwer()
 
     PARAM.SENSING_TH_db = -7;
     % PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
-    PARAM.SENSING_TH = 12 * 10^(-5);
+    PARAM.SENSING_TH = 12 * 10^(-5) * 0;
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
-    PARAM.RATE_TH = 0.5;
+    PARAM.RATE_TH = 0.25;
     PARAM.RATE_TH_SCALING = PARAM.RATE_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.1;
@@ -116,7 +116,7 @@ function sum_rate_final = qwer()
             new_distance_target = get_distance(PARAM.TARGET, new_uav, PARAM.UAV_Z);
     
             % objective_val_episode(episode) = get_objective_val(new_distance_user, new_distance_target, PARAM.NUM_USER, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, new_A_opt, new_E_opt, new_A_bar_opt, new_E_bar_opt, PARAM.ETA, PARAM.NUM_TARGET);
-            objective_val_episode(:,:,episode) = get_user_rate(PARAM.GAMMA, PARAM.NUM_ANTENNA, PARAM.P_MAX, new_distance_user, PARAM.NUM_USER, new_distance_target, PARAM.NUM_TARGET, new_E_opt, PARAM.SENSING_TH, new_A_opt, user_rate_ISAC_sum, PARAM.ISAC_TIME_SLOT_NUM);
+            objective_val_episode(:,:,episode) = get_user_rate(PARAM.GAMMA, PARAM.NUM_ANTENNA, PARAM.P_MAX, new_distance_user, PARAM.NUM_USER, new_distance_target, PARAM.NUM_TARGET, new_E_opt, PARAM.SENSING_TH, new_A_opt, user_rate_ISAC_sum, PARAM.TOTAL_TIME_SLOT);
 
             old_A_opt = new_A_opt;
             old_E_opt = new_E_opt;
