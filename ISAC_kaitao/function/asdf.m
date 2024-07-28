@@ -102,8 +102,9 @@ function [uav, z_user, user_rate] = asdf(distance_user, distance_target, num_use
 
             uav_diff = uav(2:N, :) - uav(1:N-1, :);
 
-            distance_uav = norm(uav_diff);
-            distance_uav <= V_max * delta_t;
+            for n = 1 : N - 1
+                norm(uav_diff(n,:)) <= V_max * delta_t;
+            end
 
             maximize(sum(sum(user_rate)))
 
