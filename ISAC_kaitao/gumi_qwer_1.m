@@ -30,7 +30,7 @@ function sum_rate_final = qwer()
     PARAM.SENSING_TH = 12 * 10^(-5);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
-    PARAM.RATE_TH = 1;
+    PARAM.RATE_TH = 0.25;
     PARAM.RATE_TH_SCALING = PARAM.RATE_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.1;
@@ -38,7 +38,7 @@ function sum_rate_final = qwer()
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
     PARAM.TOTAL_TIME = 40;                                                    % T
-    PARAM.TOTAL_DURATION = 0.5;                                              % delta_t
+    PARAM.TOTAL_DURATION = 2;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
     PARAM.ISAC_TIME = 20;                                                     % T_L
@@ -46,10 +46,10 @@ function sum_rate_final = qwer()
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
     PARAM.V_MAX = 30;
-    PARAM.ETA = 10^(-1) * 3;  % 8번
+    PARAM.ETA = 10^(-1);  % 8번
     PARAM.ETA_MIN = 10^(-10);
     % PARAM.ETA = 9.536743164062501e-08;
-    PARAM.Z = 1;
+    PARAM.Z = 0.8;
     PARAM.EPISILON_SCA = 1;
     PARAM.EPISILON_BCD = 0.01;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
@@ -99,7 +99,8 @@ function sum_rate_final = qwer()
 
             [new_A_bar_opt, new_E_bar_opt] = get_slack_variable(old_A_opt, old_E_opt);
             [new_A_opt, new_E_opt] = get_association(new_A_bar_opt, new_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME_SLOT, PARAM.ETA, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
-    
+            % [new_A_opt, new_E_opt] = get_association_2(new_A_bar_opt, new_E_bar_opt, PARAM.NUM_ANTENNA, PARAM.P_MAX, distance_user, PARAM.NUM_USER, distance_target, PARAM.NUM_TARGET, PARAM.SENSING_TH, PARAM.TOTAL_TIME_SLOT, PARAM.ETA, PARAM.GAMMA, PARAM.ISAC_DURATION, PARAM.RATE_TH);
+
             % new_A_opt = old_A_opt;
             % new_E_opt = old_E_opt;
 

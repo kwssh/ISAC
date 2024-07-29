@@ -7,15 +7,15 @@ function sum_rate_final = qwer()
     PARAM.NUM_ANTENNA = 16;
     PARAM.NUM_EPISODE = 10^(6);
 
-    % PARAM.USER = [250 400; 350 450; 450 450; 550 400];
-    % PARAM.UAV_START = [270 200];
-    % PARAM.UAV_END = [530 200];
-    % PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
+    PARAM.USER = [250 400; 350 450; 450 450; 550 400];
+    PARAM.UAV_START = [270 200];
+    PARAM.UAV_END = [530 200];
+    PARAM.TARGET = [320 160; 360 120; 440 120; 480 160];
 
-    PARAM.USER = [-100 50; 0 300; 100 50];
-    PARAM.UAV_START = [-100 0];
-    PARAM.UAV_END = [100 0];
-    PARAM.TARGET = [0 0];
+    % PARAM.USER = [-100 50; 0 300; 100 50];
+    % PARAM.UAV_START = [-100 0];
+    % PARAM.UAV_END = [100 0];
+    % PARAM.TARGET = [0 0];
 
     PARAM.NUM_USER = size(PARAM.USER,1);
     PARAM.NUM_TARGET = size(PARAM.TARGET,1);
@@ -30,7 +30,7 @@ function sum_rate_final = qwer()
     PARAM.SENSING_TH = 12 * 10^(-5) * 0;
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
-    PARAM.RATE_TH = 0;
+    PARAM.RATE_TH = 0.25;
     PARAM.RATE_TH_SCALING = PARAM.RATE_TH * PARAM.SCALING^2;
 
     PARAM.P_MAX = 0.1;
@@ -38,7 +38,7 @@ function sum_rate_final = qwer()
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
     PARAM.TOTAL_TIME = 40;                                                    % T
-    PARAM.TOTAL_DURATION = 40 / 40;                                              % delta_t
+    PARAM.TOTAL_DURATION = 0.25;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
     PARAM.ISAC_TIME = 20;                                                     % T_L
@@ -46,10 +46,10 @@ function sum_rate_final = qwer()
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
     PARAM.V_MAX = 30;
-    PARAM.ETA = 10^(0);  % 8번
+    PARAM.ETA = 10^(3);  % 8번
     PARAM.ETA_MIN = 10^(-10);
     % PARAM.ETA = 9.536743164062501e-08;
-    PARAM.Z = 0.99;
+    PARAM.Z = 0.8;
     PARAM.EPISILON_SCA = 1;
     PARAM.EPISILON_BCD = 0.01;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
