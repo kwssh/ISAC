@@ -56,7 +56,7 @@ function sum_rate_final = qwer()
     
     objective_val_episode = zeros(PARAM.NUM_USER, PARAM.TOTAL_TIME_SLOT, PARAM.NUM_EPISODE);
     user_rate_ISAC_sum = zeros(PARAM.NUM_USER, PARAM.TOTAL_TIME_SLOT);
-    user_rate_avg = zeros(PARAM.NUM_SENSING_TH, 1);
+    % user_rate_avg = zeros(PARAM.NUM_SENSING_TH, 1);
     
     for episode_association = 1 : PARAM.NUM_EPISODE
         for episode = 1 : PARAM.NUM_EPISODE
