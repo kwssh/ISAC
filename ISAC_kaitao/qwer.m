@@ -110,10 +110,10 @@ function sum_rate_final = qwer()
                 % new_A_opt = old_A_opt;
                 % new_E_opt = old_E_opt;
     
-                new_A_opt(new_A_opt > 0.99) = 1;
-                new_A_opt(new_A_opt < 0.01) = 0;
-    
-                new_E_opt(new_E_opt > 0.99) = 1;
+                % new_A_opt(new_A_opt > 0.99) = 1;
+                % new_A_opt(new_A_opt < 0.01) = 0;
+                % 
+                % new_E_opt(new_E_opt > 0.99) = 1;
                 new_E_opt(new_E_opt < 0.01) = 0;
     
                 % new_uav = old_uav;
