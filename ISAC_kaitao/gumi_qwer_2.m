@@ -27,7 +27,7 @@ function sum_rate_final = qwer()
 
     PARAM.SENSING_TH_db = -7;
     % PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
-    PARAM.SENSING_TH = 12 * 10^(-5);
+    PARAM.SENSING_TH = 6 * 10^(-5);
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
@@ -38,18 +38,18 @@ function sum_rate_final = qwer()
     PARAM.GAMMA = PARAM.CHANNEL_GAIN / PARAM.NOISE_POWER;
 
     PARAM.TOTAL_TIME = 40;                                                    % T
-    PARAM.TOTAL_DURATION = 40 / 14;                                              % delta_t
+    PARAM.TOTAL_DURATION = 0.25;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
-    PARAM.ISAC_TIME = 20;                                                     % T_L
+    PARAM.ISAC_TIME = 10;                                                     % T_L
     PARAM.ISAC_TIME_SLOT_NUM = PARAM.TOTAL_TIME / PARAM.ISAC_TIME;            % L
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
     PARAM.V_MAX = 30;
-    PARAM.ETA = 10^(3);  % 8번
+    PARAM.ETA = 10^(10);  % 8번
     PARAM.ETA_MIN = 10^(-10);
     % PARAM.ETA = 9.536743164062501e-08;
-    PARAM.Z = 0.8;
+    PARAM.Z = 0.99;
     PARAM.EPISILON_SCA = 1;
     PARAM.EPISILON_BCD = 0.01;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
@@ -104,11 +104,11 @@ function sum_rate_final = qwer()
             % new_A_opt = old_A_opt;
             % new_E_opt = old_E_opt;
 
-            % new_A_opt(new_A_opt > 0.99) = 1;
-            % new_A_opt(new_A_opt < 0.01) = 0;
-            % 
-            % new_E_opt(new_E_opt > 0.99) = 1;
-            % new_E_opt(new_E_opt < 0.01) = 0;
+            new_A_opt(new_A_opt > 0.99) = 1;
+            new_A_opt(new_A_opt < 0.01) = 0;
+
+            new_E_opt(new_E_opt > 0.99) = 1;
+            new_E_opt(new_E_opt < 0.01) = 0;
 
             % new_uav = old_uav;
             [new_uav, user_rate] = get_uav_trajectory_BCD_SCA(distance_user, distance_target, PARAM.NUM_USER, PARAM.NUM_TARGET, PARAM.TOTAL_TIME_SLOT, PARAM.GAMMA, PARAM.P_MAX, PARAM.NUM_ANTENNA, PARAM.SENSING_TH, PARAM, old_uav, PARAM.V_MAX, PARAM.TOTAL_DURATION, new_A_opt, new_E_opt, PARAM.RATE_TH, PARAM.ISAC_DURATION, PARAM.EPISILON_SCA);

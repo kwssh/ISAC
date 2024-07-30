@@ -46,7 +46,7 @@ function sum_rate_final = qwer()
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
     PARAM.V_MAX = 30;
-    PARAM.ETA = 10^(6);  % 8번
+    PARAM.ETA = 10^(3);  % 8번
     PARAM.ETA_MIN = 10^(-10);
     % PARAM.ETA = 9.536743164062501e-08;
     PARAM.Z = 0.8;

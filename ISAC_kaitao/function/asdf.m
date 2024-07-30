@@ -108,9 +108,9 @@ function [uav, z_user, user_rate] = asdf(distance_user, distance_target, num_use
 
             maximize(sum(sum(user_rate)))
 
-            for i = 1:isac_duration:N
-                sum(user_rate(:,i:i+isac_duration-1),2)/ isac_duration >= rate_th * scaling;
-            end
+            % for i = 1:isac_duration:N
+            %     sum(user_rate(:,i:i+isac_duration-1),2)/ isac_duration >= rate_th * scaling;
+            % end
     
         cvx_end
 

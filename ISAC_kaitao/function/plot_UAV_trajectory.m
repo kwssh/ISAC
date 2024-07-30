@@ -6,6 +6,9 @@ function fig = plot_UAV_trajectory(uav_t, PARAM)
     x = uav_t(:, 1);
     y = uav_t(:, 2);
 
+    xlim([230 570]);
+    ylim([100 470]);
+
     plot(x, y, '-^','LineWidth', 3, 'Color', [0.8 0.8 0.8], 'MarkerSize', 7);
     grid on;
     xlabel('X (m)');
@@ -13,7 +16,10 @@ function fig = plot_UAV_trajectory(uav_t, PARAM)
     title('UAV trajectory');
 
     for i = 1:length(x)
-        text(x(i), y(i), [' ' num2str(i)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right');
+
+        if i<=41 
+            text(x(i), y(i), [' ' num2str(i)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right');
+        end
     end
     
     plot(PARAM.USER(:,1), PARAM.USER(:,2), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
