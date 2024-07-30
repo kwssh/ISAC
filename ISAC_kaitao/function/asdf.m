@@ -130,7 +130,7 @@ function [uav, z_user, user_rate] = asdf(distance_user, distance_target, num_use
         % break
 
         if episode_SCA > 1
-            if sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1))) <= episilon_sca * scaling
+            if (sum(sum(user_rate_episode_SCA(:,:,episode_SCA))) - sum(sum(user_rate_episode_SCA(:,:,episode_SCA-1)))) / N <= episilon_sca * scaling
                 break
             end
         end
