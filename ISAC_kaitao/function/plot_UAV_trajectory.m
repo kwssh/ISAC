@@ -17,9 +17,9 @@ function fig = plot_UAV_trajectory(uav_t, PARAM)
 
     for i = 1:length(x)
 
-        if i<=41 
+        % if i<=41 
             text(x(i), y(i), [' ' num2str(i)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right');
-        end
+        % end
     end
     
     plot(PARAM.USER(:,1), PARAM.USER(:,2), 'x', 'MarkerSize', 10, 'LineWidth', 3, 'Color', 'red');
