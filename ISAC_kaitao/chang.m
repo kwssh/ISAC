@@ -27,7 +27,11 @@ function sum_rate_final = qwer()
 
     PARAM.SENSING_TH_db = -7;
     % PARAM.SENSING_TH = 10^(0.1 * PARAM.SENSING_TH_db) * 10^(-3);
+<<<<<<< Updated upstream:ISAC_kaitao/chang.m
     PARAM.SENSING_TH =  10^(-5);
+=======
+    PARAM.SENSING_TH = 10^(-5);
+>>>>>>> Stashed changes:ISAC_kaitao/qwer_3.m
     PARAM.SENSING_TH_SCALING = PARAM.SENSING_TH * PARAM.SCALING^2;
 
     PARAM.RATE_TH = 0.25;
