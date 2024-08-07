@@ -129,6 +129,13 @@ function sum_rate_final = qwer()
         end
 
         if user_association_val == PARAM.TOTAL_TIME_SLOT && target_association_val == PARAM.ISAC_TIME_SLOT_NUM * PARAM.NUM_TARGET
+            
+            old_A_opt(old_A_opt > PARAM.END_TH) = 1;
+            old_A_opt(old_A_opt < 1 - PARAM.END_TH) = 0;
+            old_E_opt(old_E_opt > PARAM.END_TH) = 1;
+
+            rate_final = get_user_rate(PARAM.GAMMA, PARAM.NUM_ANTENNA, PARAM.P_MAX, new_distance_user, PARAM.NUM_USER, new_distance_target, PARAM.NUM_TARGET, old_E_opt, PARAM.SENSING_TH, old_A_opt, user_rate_ISAC_sum, PARAM.TOTAL_TIME_SLOT);
+            
             break
         end
 
