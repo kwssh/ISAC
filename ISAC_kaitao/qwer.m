@@ -5,7 +5,7 @@ function sum_rate_final = qwer()
     %-----------------------------setting parameter-----------------------------------------------------------------------------------------------------------------------------%
     PARAM.SCALING = 1000;
     PARAM.NUM_ANTENNA = 16;
-    PARAM.NUM_EPISODE = 10^(2);
+    PARAM.NUM_EPISODE = 10^(6);
 
     PARAM.USER = [250 400; 350 450; 450 450; 550 400];
     PARAM.UAV_START = [270 200];
@@ -53,6 +53,7 @@ function sum_rate_final = qwer()
     PARAM.EPISILON_SCA = 1;
     PARAM.EPISILON_BCD = 0.01;
     PARAM.ASSOCIATION_TH = 0.99;
+    PARAM.END_TH = 0.95;
     %----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
     
     objective_val_episode = zeros(PARAM.NUM_USER, PARAM.TOTAL_TIME_SLOT, PARAM.NUM_EPISODE);
@@ -123,8 +124,8 @@ function sum_rate_final = qwer()
             E_max_tmp = max(old_E_opt(:,:,i:i+PARAM.ISAC_DURATION-1));
             E_max = max(max(E_max_tmp, [], 1), [], 3);
 
-            user_association_val = user_association_val + sum(A_max >= PARAM.ASSOCIATION_TH);
-            target_association_val = target_association_val + sum(E_max >= PARAM.ASSOCIATION_TH);
+            user_association_val = user_association_val + sum(A_max >= PARAM.END_TH);
+            target_association_val = target_association_val + sum(E_max >= PARAM.END_TH);
         end
 
         if user_association_val == PARAM.TOTAL_TIME_SLOT && target_association_val == PARAM.ISAC_TIME_SLOT_NUM * PARAM.NUM_TARGET
