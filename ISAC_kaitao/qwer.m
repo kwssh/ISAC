@@ -41,15 +41,15 @@ function sum_rate_final = qwer()
     PARAM.TOTAL_DURATION = 0.25;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
-    PARAM.ISAC_TIME = 10;                                                     % T_L
+    PARAM.ISAC_TIME = 80;                                                     % T_L
     PARAM.ISAC_TIME_SLOT_NUM = PARAM.TOTAL_TIME / PARAM.ISAC_TIME;            % L
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
     PARAM.V_MAX = 30;
-    PARAM.ETA = 10^(6);  % 8번
+    PARAM.ETA = 10^(3);  % 8번
     PARAM.ETA_MIN = 10^(-10);
     % PARAM.ETA = 9.536743164062501e-08;
-    PARAM.Z = 0.5;
+    PARAM.Z = 0.8;
     PARAM.EPISILON_SCA = 1;
     PARAM.EPISILON_BCD = 0.01;
     PARAM.ASSOCIATION_TH = 0.99;
