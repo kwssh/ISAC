@@ -41,7 +41,7 @@ function sum_rate_final = qwer()
     PARAM.TOTAL_DURATION = 0.25;                                              % delta_t
     PARAM.TOTAL_TIME_SLOT = PARAM.TOTAL_TIME / PARAM.TOTAL_DURATION;          % N
 
-    PARAM.ISAC_TIME = 2.5;                                                     % T_L
+    PARAM.ISAC_TIME = 5;                                                     % T_L
     PARAM.ISAC_TIME_SLOT_NUM = PARAM.TOTAL_TIME / PARAM.ISAC_TIME;            % L
     PARAM.ISAC_DURATION = PARAM.TOTAL_TIME_SLOT / PARAM.ISAC_TIME_SLOT_NUM;   % N_L
 
